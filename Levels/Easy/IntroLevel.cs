@@ -18,16 +18,16 @@ namespace Munchstein.Levels.Easy
 
             var platforms = new List<Platform>();
 
-            platforms.Add(new Platform(new BoxBoundary(new Point2(2, 9.5), width: 1, height: 1)));
+            platforms.Add(new Platform(new BoxBoundary(new Point2(1, 9.5), width: 2, height: 1)));
 
             for (int i = 0; i < 5; i++)
             {
-                platforms.Add(new Platform(new BoxBoundary(new Point2(4 + i * i / 5.5 + i * 2, 12 - i),
+                platforms.Add(new Platform(new BoxBoundary(new Point2(4 + i * i / 6.5 + i * 2, 12 - i),
                                                            width: 5,
                                                            height: 1)));
                 
                 platforms.Add(new Platform(new BoxBoundary(platforms.Last().Box.TopLeft - new Vector2(1, 2.5),
-                                                           width: 1.5,
+                                                           width: 1.3,
                                                            height: 1)));
             }
 

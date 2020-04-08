@@ -137,6 +137,8 @@ namespace Munchstein
 
         public void MoveSideways(int sign)
         {
+            UpdateSupportingPlatform();
+
             if (CurrentPlatform == null)
             {
                 return;
@@ -158,6 +160,8 @@ namespace Munchstein
 
         public void Down()
         {
+            UpdateSupportingPlatform();
+
             if (CurrentPlatform == null)
             {
                 return;
@@ -192,6 +196,8 @@ namespace Munchstein
 
         public void Jump()
         {
+            UpdateSupportingPlatform();
+
             if (CurrentPlatform == null)
             {
                 return;

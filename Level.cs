@@ -12,8 +12,8 @@ namespace Munchstein
         {
             _levelControl = levelControl;
             _platforms = platforms;
-            Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.NUDGE_X);
-            Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.NUDGE_X);
+            Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.NUDGE_X / 2);
+            Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.NUDGE_X / 2);
         }
 
         public Actor Actor { get; private set; }

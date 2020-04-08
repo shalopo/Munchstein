@@ -28,10 +28,9 @@ namespace Munchstein
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(x: a.X + b.X, y: a.Y + b.Y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => a + (-b);
 
-        public static Vector2 operator *(double coefficient, Vector2 v) =>
-            new Vector2(x: v.X * coefficient, y: v.Y * coefficient);
-
+        public static Vector2 operator *(double coefficient, Vector2 v) => new Vector2(x: v.X * coefficient, y: v.Y * coefficient);
         public static Vector2 operator *(Vector2 v, double coefficient) => coefficient * v;
+        public static Vector2 operator /(Vector2 v, double coefficient) => 1 / coefficient * v;
 
         public static readonly Vector2 ZERO = new Vector2(0, 0);
         public static readonly Vector2 NUDGE_X = new Vector2(1, 0);

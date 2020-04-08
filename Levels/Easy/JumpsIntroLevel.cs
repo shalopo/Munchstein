@@ -18,14 +18,9 @@ namespace Munchstein.Levels.Easy
 
             var platforms = new List<Platform>();
 
-            var step_width = 1.5;
-            var step_height = 1;
-
             for (int i = 0; i < 5; i++)
             {
-                platforms.Add(new Platform(new BoxBoundary(new Point2(3 + i * i / 2.6 + i * 1.3 * step_width, 3 + (i + 1) * step_height),
-                                                           width: step_width,
-                                                           height: 1)));
+                platforms.Add(new Platform(new BoxBoundary(new Point2(3 + i * i / 2.6 + 2 * i, 4 + i), width: 1.5, height: 1)));
             }
 
             platforms[0].OnActorStanding += actor => levelContext.DisplayHint(JUMP_HINT);

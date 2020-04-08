@@ -47,7 +47,7 @@ namespace Munchstein.Levels.Easy
             platforms.Last().OnActorStanding += actor => levelContext.DisplayMessage("This is getting exciting!");
             deathTaunts.Add(platforms.Last(), "LOL. You knew this would fail");
 
-            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(7, -2), width: 1, height: 1)));
+            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(7, -2.1), width: 1, height: 1)));
             platforms.Last().OnActorStanding += actor => levelContext.DisplayMessage("Finally! You did another pointless move");
             deathTaunts.Add(platforms.Last(), "Are your hands sweaty?");
 
