@@ -189,7 +189,6 @@ namespace Munchstein
             var door = _level.GetAdjacentDoor(Location);
             if (door != null)
             {
-                door.Open();
                 _level.NotifyDoorOpened(door);
             }
         }

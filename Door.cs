@@ -11,15 +11,9 @@ namespace Munchstein
         public Door(Point2 location) => Location = location;
 
         public Point2 Location { get; private set; }
-        public bool IsOpen { get; private set; } = false;
 
         public double Height => 1;
         public double Width => Height / 2;
         public BoxBoundary Box => new BoxBoundary(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
-
-        public void Open()
-        {
-            IsOpen = true;
-        }
     }
 }

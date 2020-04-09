@@ -34,13 +34,13 @@ namespace Munchstein.Levels.Easy
             deathTaunts.Add(platforms[4], "That was an awkward attempt");
             deathTaunts.Add(platforms[5], "You were trained to do this right");
 
-            var topLeftCube = new Point2(11.3, 13);
+            var topLeftCube = new Point2(11.2, 13);
             platforms.Add(new Platform(new BoxBoundary(topLeftCube, width: 1, height: 1)));
             deathTaunts.Add(platforms.Last(), "Real smooth...");
 
             platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(4, -4), width: 1, height: 1)));
 
-            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(6, -6), width: 2, height: 2)));
+            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(6.1, -6), width: 2, height: 2)));
             deathTaunts.Add(platforms.Last(), "Closette but not quite the cigarette");
 
             platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(2, -7), width: 1, height: 1)));

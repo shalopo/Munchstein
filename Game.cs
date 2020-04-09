@@ -15,12 +15,13 @@ namespace Munchstein
 {
     public partial class Game : Form, ILevelContext
     {
-        static readonly double DRAW_SCALE = 50;
+        static readonly int DRAW_SCALE = 64;
 
         LevelsSequence LevelsSequence { get; set; }
         int LevelIndex { get; set; }
         ILevelFactory LevelFactory => LevelsSequence[LevelIndex];
         Level Level { get; set; }
+        BufferedGraphics _staticGraphics;
 
         LevelReplayContext _levelReplayContext;
 
@@ -34,20 +35,29 @@ namespace Munchstein
         DateTime _lastFpsMeasurementTime = DateTime.MinValue;
         int _framesRendered = 0;
         int _fps = 0;
+        bool _showGridlines = false;
 
-        const double MAX_FPS = 60;
-        const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
+        //const double MAX_FPS = 60;
+        //const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
 
         public Game()
         {
             InitializeComponent();
 
-            //LevelsSequence = new LevelsSequence { new Levels.Easy.ConfusingJumpsLevel() };
-            LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
+            LevelsSequence = new LevelsSequence { new Levels.Easy.ConfusingJumpsLevel() };
+
+            DebugLevel(Levels.Easy.LevelsSequenceFactory.Create());
+
             LevelIndex = 0;
             StartLevel();
 
             KeyDown += OnKeyDown;
+        }
+
+        private void DebugLevel(LevelsSequence levelsSequence)
+        {
+            _showGridlines = true;
+            LevelsSequence = levelsSequence;
         }
 
         public void DisplayMessage(string msg, int? seconds = null)
@@ -79,6 +89,12 @@ namespace Munchstein
             _levelReplayContext = new LevelReplayContext();
 
             InitLevel();
+
+            if (_staticGraphics != null)
+            {
+                _staticGraphics.Dispose();
+                _staticGraphics = null;
+            }
         }
 
         private void InitLevel()
@@ -106,11 +122,38 @@ namespace Munchstein
             StartLevel();
         }
 
+        void DrawStaticObjects(Graphics g)
+        {
+            if (_showGridlines)
+            {
+                DrawGridlines(g);
+            }
+
+            if (Level.Door != null)
+            {
+                DrawDoor(g, Level.Door);
+            }
+
+            foreach (Platform platform in Level.Platforms)
+            {
+                DrawPlatform(g, platform);
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
+            if (_staticGraphics == null)
+            {
+                _staticGraphics = BufferedGraphicsManager.Current.Allocate(CreateGraphics(), DisplayRectangle);
+                DrawStaticObjects(_staticGraphics.Graphics);
+                _staticGraphics.Render();
+            }
+
             var g = e.Graphics;
+
+            _staticGraphics.Render(g);
 
             var renderTimeDiff = DateTime.UtcNow - _lastRenderTime;
 
@@ -130,7 +173,6 @@ namespace Munchstein
 
             const int STEPS_PER_SECOND = 200;
             var num_steps = (int)Math.Round(STEPS_PER_SECOND / 1000.0 * renderTimeDiff.TotalMilliseconds);
-            g.DrawString(num_steps.ToString(), new Font("arial", 12), Brushes.White, 0, 20);
 
             for (int i = 0; i < num_steps; i++)
             {
@@ -142,22 +184,33 @@ namespace Munchstein
                 DrawHint(g);
             }
 
-            if (Level.Door != null)
-            {
-                DrawDoor(g, Level.Door);
-            }
-
             DrawActor(g, Level.Actor);
-
-            foreach (Platform platform in Level.Platforms)
-            {
-                DrawPlatform(g, platform);
-            }
 
             UpdateFps();
             g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
 
             Invalidate();
+        }
+
+        private void DrawGridlines(Graphics g)
+        {
+            var pen = new Pen(Color.FromArgb(100, 50, 50, 50), 1);
+            var font = new Font("arial", 10);
+
+            int MAX_X = Size.Width / DRAW_SCALE;
+            int MAX_Y = Size.Height / DRAW_SCALE;
+
+            for (int x = 0; x < MAX_X; x++)
+            {
+                g.DrawLine(pen, new Point(TransformX(x), 0), new Point(TransformX(x), Height));
+                g.DrawString(x.ToString(), font, Brushes.LightGray, Transform(new Point2(x, 0.2)));
+            }
+
+            for (int y = 0; y < MAX_Y; y++)
+            {
+                g.DrawLine(pen, new Point(0, TransformY(y)), new Point(Width, TransformY(y)));
+                g.DrawString(y.ToString(), font, Brushes.LightGray, Transform(new Point2(0, y + 0.2)));
+            }
         }
 
         private void UpdateFps()
@@ -172,14 +225,24 @@ namespace Munchstein
             }
         }
 
+        private int TransformX(double x)
+        {
+            return (int)Math.Round(x * DRAW_SCALE);
+        }
+
+        private int TransformY(double y)
+        {
+            return Height - (int)Math.Round(y * DRAW_SCALE);
+        }
+
         private Point Transform(Point2 p)
         {
-            return new Point((int)Math.Round(p.X * DRAW_SCALE), Height - (int)Math.Round((p.Y) * DRAW_SCALE));
+            return new Point(TransformX(p.X), TransformY(p.Y));
         }
 
         private Size Transform(Vector2 v)
         {
-            return new Size((int)Math.Round(v.X * DRAW_SCALE), (int)Math.Round((v.Y) * DRAW_SCALE));
+            return new Size((int)Math.Round(v.X * DRAW_SCALE), (int)Math.Round(v.Y * DRAW_SCALE));
         }
 
         private Rectangle Transform(BoxBoundary box)
@@ -201,14 +264,7 @@ namespace Munchstein
 
         private void DrawDoor(Graphics g, Door door)
         {
-            if (door.IsOpen)
-            {
-                g.DrawRectangle(new Pen(Brushes.Yellow), Transform(door.Box));
-            }
-            else
-            {
-                g.FillRectangle(Brushes.Yellow, Transform(door.Box));
-            }
+            g.FillRectangle(Brushes.Yellow, Transform(door.Box));
         }
 
         private void DrawActor(Graphics g, Actor actor)
@@ -230,7 +286,7 @@ namespace Munchstein
             }
 
             var font = new Font("Courier new", 42);
-            g.DrawString(_msgToDisplay, font, Brushes.Orange, new PointF(40, 40));
+            g.DrawString(_msgToDisplay, font, Brushes.Orange, new PointF(40, 60));
 
             return true;
         }
@@ -249,7 +305,7 @@ namespace Munchstein
             }
 
             var font = new Font("Courier new", 42);
-            g.DrawString(_hintToDisplay.Message, font, Brushes.Orange, new PointF(40, 40));
+            g.DrawString(_hintToDisplay.Message, font, Brushes.Orange, new PointF(40, 60));
         }
 
         private void HandleContinuousKeys()
