@@ -29,7 +29,7 @@ namespace Munchstein
         {
             foreach (Platform platform in _platforms)
             {
-                if (!platform.IsPassThrough)
+                if (platform.Type == PlatformType.CONCRENT)
                 {
                     var collision_box = box.CalcualteCollisionBox(disposition, platform.Box);
 

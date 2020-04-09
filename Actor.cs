@@ -30,6 +30,7 @@ namespace Munchstein
         public event Action OnDeath;
         public event Action OnJump;
         public event Action OnDrop;
+        public event Action OnSizeUp;
 
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
@@ -114,6 +115,7 @@ namespace Munchstein
             if (_level.TryEatMunch(Box) != null)
             {
                 Size *= 2;
+                OnSizeUp?.Invoke();
             }
 
             if (Location.Y <= 0)
@@ -186,7 +188,7 @@ namespace Munchstein
 
             OnDrop?.Invoke();
 
-            if (CurrentPlatform.IsPassThrough)
+            if (CurrentPlatform.Type == PlatformType.PASSTHROUGH)
             {
                 Velocity = new Vector2(Velocity.X, -1);
                 Location += new Vector2(0, - Platform.STANDING_THRESHOLD - 0.01);

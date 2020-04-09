@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Munchstein
 {
+    public enum PlatformType
+    {
+        CONCRENT,
+        PASSTHROUGH,
+        ONEWAY,
+    }
+
     public class Platform
     {
         public static readonly double STANDING_THRESHOLD = 0.1;
@@ -19,11 +26,16 @@ namespace Munchstein
 
         public static Platform PassThrough(Point2 topLeft, double width)
         {
-            return new Platform(new BoxBoundary(topLeft: topLeft, width: width, height: 0.01)) { IsPassThrough = true };
+            return new Platform(new BoxBoundary(topLeft: topLeft, width: width, height: 0)) { Type = PlatformType.PASSTHROUGH };
+        }
+
+        public static Platform OneWay(Point2 topLeft, double width)
+        {
+            return new Platform(new BoxBoundary(topLeft: topLeft, width: width, height: 0)) { Type = PlatformType.ONEWAY };
         }
 
         public BoxBoundary Box { get; private set; }
-        public bool IsPassThrough { get; private set; }
+        public PlatformType Type { get; private set; }
 
         public event Action<Actor> OnActorStanding;
 

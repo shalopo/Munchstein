@@ -47,7 +47,7 @@ namespace Munchstein
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
 
-            //DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
+            DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
 
 
             LevelIndex = 0;
@@ -269,13 +269,17 @@ namespace Munchstein
 
         private void DrawPlatform(Graphics g, Platform platform)
         {
-            if (platform.IsPassThrough)
+            switch (platform.Type)
             {
-                g.DrawRectangle(new Pen(Brushes.White), Transform(platform.Box));
-            }
-            else
-            {
-                g.FillRectangle(Brushes.White, Transform(platform.Box));
+                case PlatformType.CONCRENT:
+                    g.FillRectangle(Brushes.White, Transform(platform.Box));
+                    break;
+                case PlatformType.PASSTHROUGH:
+                    g.DrawLine(new Pen(Brushes.White, 3), Transform(platform.Box.TopLeft), Transform(platform.Box.TopRight));
+                    break;
+                case PlatformType.ONEWAY:
+                    g.DrawLine(new Pen(Brushes.Red, 3), Transform(platform.Box.TopLeft), Transform(platform.Box.TopRight));
+                    break;
             }
         }
 
