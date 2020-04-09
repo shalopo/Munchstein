@@ -47,7 +47,7 @@ namespace Munchstein
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
 
-            DebugLevel(new Levels.Easy.ConfusingJumpsLevel());
+            //DebugLevel(new LevelFactory<Levels.Easy.ConfusingJumpsLevel>());
 
 
             LevelIndex = 0;

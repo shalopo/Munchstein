@@ -59,9 +59,9 @@ namespace Munchstein
             return null;
         }
 
-        public Door GetAdjacentDoor(Point2 point)
+        public Door GetAdjacentDoor(BoxBoundary box)
         {
-            if (Door != null && Door.Box.Contains(point))
+            if (Door != null && BoxBoundary.Overlap(Door.Box, box))
             {
                 return Door;
             }

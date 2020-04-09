@@ -6,45 +6,41 @@ using System.Threading.Tasks;
 
 namespace Munchstein.Levels.Easy
 {
-    class JumpsIntroLevel : ILevelFactory
+    class JumpsIntroLevel : LevelBuilder
     {
         static readonly Hint JUMP_HINT = new Hint("Hit SPACE to jump");
         static readonly Hint MOMENTUM_HINT = new Hint("Keep up the good momentum, metaphorically speaking");
 
-        public Level Create(ILevelContext levelContext)
+        protected override void Build()
         {
-            var deathTaunts = new DeathTaunts(levelContext);
-            deathTaunts.Add(null, "What a shame, I had such high hopes for you");
-
-            var platforms = new List<Platform>();
+            DeathTaunts.Add(null, "What a shame, I had such high hopes for you");
 
             for (int i = 0; i < 5; i++)
             {
-                platforms.Add(new Platform(new BoxBoundary(new Point2(3 + i * i / 2.6 + 2 * i, 4 + i), width: 1.5, height: 1)));
+                Add(new Platform(new BoxBoundary(new Point2(3 + i * i / 2.7 + 2 * i, 4 + i), width: 1.5, height: 1)));
             }
 
-            platforms[0].OnActorStanding += actor => levelContext.DisplayHint(JUMP_HINT);
-            platforms[platforms.Count - 2].OnActorStanding += actor =>
+            Platforms[0].OnActorStanding += actor => LevelContext.DisplayHint(JUMP_HINT);
+            Platforms[Platforms.Count - 2].OnActorStanding += actor =>
             {
                 if (actor.Velocity.IsZero)
                 {
-                    levelContext.DisplayHint(MOMENTUM_HINT);
+                    LevelContext.DisplayHint(MOMENTUM_HINT);
                 }
             };
 
-            deathTaunts.Add(platforms[platforms.Count - 2], "You snooze, you lose");
+            DeathTaunts.Add(Platforms[Platforms.Count - 2], "You snooze, you lose");
+        }
 
-            var level = new Level(levelContext, platforms);
-
-            level.Actor.OnDeath += () => deathTaunts.NotifyDeath(level.Actor.LastPlatform);
+        protected override void PostBuild(Level level)
+        {
+            level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
 
             level.Actor.OnJump += () =>
             {
-                levelContext.SuppressHint(JUMP_HINT);
-                levelContext.DisplayMessage("You got it!", seconds: 2);
+                LevelContext.SuppressHint(JUMP_HINT);
+                LevelContext.DisplayMessage("You got it!", seconds: 2);
             };
-
-            return level;
         }
     }
 }

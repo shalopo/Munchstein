@@ -12,7 +12,7 @@ namespace Munchstein.Levels.Credits
         {
             return new LevelsSequence
             {
-                new CreditsLevel(),
+                new LevelFactory<CreditsLevel>(),
             };
         }
     }

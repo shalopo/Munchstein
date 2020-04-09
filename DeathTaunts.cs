@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Munchstein
 {
-    class DeathTaunts
+    public class DeathTaunts
     {
         public DeathTaunts(ILevelContext levelContext) => _levelContext = levelContext;
 

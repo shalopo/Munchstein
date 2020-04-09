@@ -43,8 +43,8 @@ namespace Munchstein
 
         public Vector2 CalcualteCollisionBox(Vector2 disposition, BoxBoundary other)
         {
-            if (AreInCollision(this + disposition, other) && 
-               !AreInCollision(this, other))
+            if (Overlap(this + disposition, other) && 
+               !Overlap(this, other))
             {
                 if (disposition.X >= 0 && disposition.Y >= 0)
                 {
@@ -69,7 +69,7 @@ namespace Munchstein
             }
         }
 
-        private static bool AreInCollision(BoxBoundary a, BoxBoundary b)
+        public static bool Overlap(BoxBoundary a, BoxBoundary b)
         {
             return a.Right > b.Left &&
                    a.Left < b.Right &&

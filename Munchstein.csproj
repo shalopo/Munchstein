@@ -63,6 +63,7 @@
     <Compile Include="ILevelContext.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="ILevelFactory.cs" />
+    <Compile Include="LevelFactory.cs" />
     <Compile Include="LevelReplayContext.cs" />
     <Compile Include="LevelsSequence.cs" />
     <Compile Include="Levels\Credits\LevelsSequenceFactory.cs" />

@@ -12,10 +12,10 @@ namespace Munchstein.Levels.Easy
         {
             return new LevelsSequence
             {
-                new IntroLevel(),
-                new JumpsIntroLevel(),
-                new RunDownLevel(),
-                new ConfusingJumpsLevel(),
+                new LevelFactory<IntroLevel>(),
+                new LevelFactory<JumpsIntroLevel>(),
+                new LevelFactory<RunDownLevel>(),
+                new LevelFactory<ConfusingJumpsLevel>(),
             };
         }
     }

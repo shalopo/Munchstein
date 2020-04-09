@@ -18,6 +18,8 @@ namespace Munchstein
         
         public Point2 Location { get; internal set; }
         public Vector2 Velocity { get; internal set; }
+        public bool CanJump { get; set; } = true;
+
         private int _lastWalkSign = 0;
         private int _continuousWalkTime = 0;
 
@@ -192,7 +194,7 @@ namespace Munchstein
                 return;
             }
 
-            var door = _level.GetAdjacentDoor(Location);
+            var door = _level.GetAdjacentDoor(Box);
             if (door != null)
             {
                 _level.NotifyDoorOpened(door);
@@ -201,6 +203,11 @@ namespace Munchstein
 
         public void Jump()
         {
+            if (!CanJump)
+            {
+                return;
+            }
+
             UpdateSupportingPlatform();
 
             if (CurrentPlatform == null)
