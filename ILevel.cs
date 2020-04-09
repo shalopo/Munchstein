@@ -5,6 +5,7 @@
         Platform GetSupportingPlatform(BoxBoundary box);
         Vector2 GetCollisionBox(BoxBoundary box, Vector2 disposition);
         Door GetAdjacentDoor(BoxBoundary box);
+        Munch TryEatMunch(BoxBoundary box);
 
         void NotifyDoorOpened(Door door);
         void NotifyActorDead();

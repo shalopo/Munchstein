@@ -12,8 +12,8 @@ namespace Munchstein
         {
             _levelControl = levelControl;
             _platforms = platforms;
-            Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.NUDGE_X / 2);
-            Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.NUDGE_X / 2);
+            Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.X_UNIT / 2);
+            Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2);
         }
 
         public Actor Actor { get; private set; }
@@ -21,10 +21,11 @@ namespace Munchstein
         readonly ILevelContext _levelControl;
         readonly List<Platform> _platforms = new List<Platform>();
         public Door Door { get; private set; }
+        public Munch Munch { get; set; }
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
 
-        public Vector2 GetCollisionBox(BoxBoundary box, Vector2 disposition)
+        Vector2 ILevel.GetCollisionBox(BoxBoundary box, Vector2 disposition)
         {
             foreach (Platform platform in _platforms)
             {
@@ -43,7 +44,7 @@ namespace Munchstein
             return Vector2.ZERO;
         }
 
-        public Platform GetSupportingPlatform(BoxBoundary box)
+        Platform ILevel.GetSupportingPlatform(BoxBoundary box)
         {
             foreach (Platform platform in _platforms)
             {
@@ -59,7 +60,7 @@ namespace Munchstein
             return null;
         }
 
-        public Door GetAdjacentDoor(BoxBoundary box)
+        Door ILevel.GetAdjacentDoor(BoxBoundary box)
         {
             if (Door != null && BoxBoundary.Overlap(Door.Box, box))
             {
@@ -77,6 +78,18 @@ namespace Munchstein
         void ILevel.NotifyActorDead()
         {
             _levelControl.RestartLevel();
+        }
+
+        Munch ILevel.TryEatMunch(BoxBoundary box)
+        {
+            if (Munch != null && BoxBoundary.Overlap(Munch.Box, box))
+            {
+                var munch = Munch;
+                Munch = null;
+                return munch;
+            }
+
+            return null;
         }
 
         public void Step(double dt)

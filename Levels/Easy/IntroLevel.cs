@@ -15,12 +15,12 @@ namespace Munchstein.Levels.Easy
         {
             DeathTaunts.Add(null, "You should have stayed at school");
 
-            Add(new Platform(new BoxBoundary(new Point2(1, 9.5), width: 2, height: 1)));
+            Add(Platform.Concrete(new Point2(1, 9.5), width: 2));
 
             for (int i = 0; i < 5; i++)
             {
-                Add(new Platform(new BoxBoundary(new Point2(4 + i * i / 6.5 + i * 2, 12 - i), width: 5, height: 1)));
-                Add(new Platform(new BoxBoundary(Platforms.Last().Box.TopLeft - new Vector2(1, 2.5), width: 1.3, height: 1)));
+                Add(Platform.Concrete(new Point2(4 + i * i / 6.5 + i * 2, 12 - i), width: 5));
+                Add(Platform.Concrete(Platforms.Last().Box.TopLeft - new Vector2(1, 2.5), width: 1.3));
             }
 
             Platforms[0].OnActorStanding += actor => LevelContext.DisplayHint(RIGHT_HINT);

@@ -16,6 +16,7 @@ namespace Munchstein.Levels.Easy
                 new LevelFactory<JumpsIntroLevel>(),
                 new LevelFactory<RunDownLevel>(),
                 new LevelFactory<ConfusingJumpsLevel>(),
+                new LevelFactory<FirstMunchLevel>(),
             };
         }
     }

@@ -10,9 +10,12 @@ namespace Munchstein
     public class Actor
     {
         static readonly Vector2 GRAVITY = new Vector2(0, -9.8);
-        static readonly double MAX_GROUND_SPEED = 3;
+        static readonly double BASE_MAX_GROUND_SPEED = 3;
         static readonly double MIN_GROUND_SPEED = 1.5;
-
+        static readonly double DRAG_CONSTANT = 0.012;
+        static readonly double BASE_JUMP_SPEED = 7;
+        static readonly double BASE_GROUND_ACCELERATION = 0.02;
+        
         public Actor(ILevel level, Point2 location) => 
             (Location, Velocity, _level) = (location, new Vector2(0, 0), level);
         
@@ -31,8 +34,14 @@ namespace Munchstein
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
 
-        public double Height => 1;
-        public double Width => Height / 2;
+        private double Size { get; set; } = 1;
+        public double Height => Size;
+        public double Width => Size / 2;
+
+        private double SizeFactor => 0.4 + 0.6 * Size;
+        double JumpSpeed => SizeFactor * BASE_JUMP_SPEED;
+        double MaxGroundSpeed => SizeFactor * BASE_MAX_GROUND_SPEED;
+        double GroundAcceleration => SizeFactor * BASE_GROUND_ACCELERATION;
         public BoxBoundary Box => new BoxBoundary(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
 
         public void ApplyAcceleration(Vector2 acceleration, double dt)
@@ -42,7 +51,7 @@ namespace Munchstein
 
         private void ApplyDrag(double dt)
         {
-            ApplyAcceleration(-0.012 * Velocity * Velocity.LengthSquared, dt);
+            ApplyAcceleration(-DRAG_CONSTANT * Velocity * Velocity.LengthSquared, dt);
         }
 
         private void UpdateSupportingPlatform()
@@ -102,6 +111,11 @@ namespace Munchstein
                 Location += dt * Velocity.XProjection;
             }
 
+            if (_level.TryEatMunch(Box) != null)
+            {
+                Size *= 2;
+            }
+
             if (Location.Y <= 0)
             {
                 OnDeath?.Invoke();
@@ -158,7 +172,7 @@ namespace Munchstein
 
             _lastWalkSign = sign;
 
-            Velocity = new Vector2(sign * Math.Min(MIN_GROUND_SPEED + (0.02 * _continuousWalkTime), MAX_GROUND_SPEED), 0);
+            Velocity = new Vector2(sign * Math.Min(MIN_GROUND_SPEED + (GroundAcceleration * _continuousWalkTime), MaxGroundSpeed), 0);
         }
 
         public void Drop()
@@ -217,7 +231,7 @@ namespace Munchstein
 
             OnJump?.Invoke();
 
-            Velocity += new Vector2(0, 7);
+            Velocity += new Vector2(0, JumpSpeed);
 
             LastPlatform = CurrentPlatform;
             CurrentPlatform = null;

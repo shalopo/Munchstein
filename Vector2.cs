@@ -33,8 +33,8 @@ namespace Munchstein
         public static Vector2 operator /(Vector2 v, double coefficient) => 1 / coefficient * v;
 
         public static readonly Vector2 ZERO = new Vector2(0, 0);
-        public static readonly Vector2 NUDGE_X = new Vector2(1, 0);
-        public static readonly Vector2 NUDGE_Y = new Vector2(0, 1);
+        public static readonly Vector2 X_UNIT = new Vector2(1, 0);
+        public static readonly Vector2 Y_UNIT = new Vector2(0, 1);
 
         public override string ToString()
         {

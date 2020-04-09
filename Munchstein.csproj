@@ -67,12 +67,14 @@
     <Compile Include="LevelReplayContext.cs" />
     <Compile Include="LevelsSequence.cs" />
     <Compile Include="Levels\Credits\LevelsSequenceFactory.cs" />
+    <Compile Include="Levels\Easy\FirstMunchLevel.cs" />
     <Compile Include="Levels\Easy\IntroLevel.cs" />
     <Compile Include="Levels\Easy\RunDownLevel.cs" />
     <Compile Include="Levels\Easy\ConfusingJumpsLevel.cs" />
     <Compile Include="Levels\Easy\JumpsIntroLevel.cs" />
     <Compile Include="Levels\Easy\LevelsSequenceFactory.cs" />
     <Compile Include="Levels\Credits\CreditsLevel.cs" />
+    <Compile Include="Munch.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Point2.cs" />
     <Compile Include="Program.cs" />

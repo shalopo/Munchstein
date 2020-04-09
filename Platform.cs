@@ -10,7 +10,17 @@ namespace Munchstein
     {
         public static readonly double STANDING_THRESHOLD = 0.1;
 
-        public Platform(BoxBoundary box, bool is_passthrough = false) => (Box, IsPassThrough) = (box, is_passthrough);
+        private Platform(BoxBoundary box) => Box = box;
+
+        public static Platform Concrete(Point2 topLeft, double width, double height = 1)
+        {
+            return new Platform(new BoxBoundary(topLeft: topLeft, width: width, height: height));
+        }
+
+        public static Platform PassThrough(Point2 topLeft, double width)
+        {
+            return new Platform(new BoxBoundary(topLeft: topLeft, width: width, height: 0.01)) { IsPassThrough = true };
+        }
 
         public BoxBoundary Box { get; private set; }
         public bool IsPassThrough { get; private set; }

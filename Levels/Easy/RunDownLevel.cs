@@ -17,14 +17,14 @@ namespace Munchstein.Levels.Easy
         {
             for (int i = 0; i < 2; i++)
             {
-                Add(new Platform(new BoxBoundary(new Point2(3, 5 + i * 2), width: i + i * i / 6.0 + 3, height: 0.1),
-                                                           is_passthrough: true));
+                Add(Platform.PassThrough(new Point2(3, 5 + i * 2), width: i + i * i / 6.0 + 3));
             }
 
             var runDownPlatform = Platforms.Last();
 
-            Add(new Platform(new BoxBoundary(runDownPlatform.Box.TopRight + new Vector2(0.3, 3.7), width: 1, height: 3)));
-            Add(new Platform(new BoxBoundary(runDownPlatform.Box.TopRight + new Vector2(0.5, -2), width: 3, height: 1)));
+            Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(0.3, 3.7), width: 1, height: 3));
+            Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(0.5, -2), width: 1));
+            Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(5, -2), width: 3));
 
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Yay!");
 

@@ -47,7 +47,7 @@ namespace Munchstein
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
 
-            //DebugLevel(new LevelFactory<Levels.Easy.ConfusingJumpsLevel>());
+            //DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
 
 
             LevelIndex = 0;
@@ -183,12 +183,22 @@ namespace Munchstein
                 DrawHint(g);
             }
 
+            if (Level.Munch != null)
+            {
+                DrawMunch(g, Level.Munch);
+            }
+
             DrawActor(g, Level.Actor);
 
             UpdateFps();
             g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
 
             Invalidate();
+        }
+
+        private void DrawMunch(Graphics g, Munch munch)
+        {
+            g.FillEllipse(Brushes.Green, Transform(munch.Box));
         }
 
         private void DrawGridlines(Graphics g)
