@@ -67,7 +67,7 @@
     <Compile Include="LevelsSequence.cs" />
     <Compile Include="Levels\Credits\LevelsSequenceFactory.cs" />
     <Compile Include="Levels\Easy\IntroLevel.cs" />
-    <Compile Include="Levels\Easy\TowerLeapLevel.cs" />
+    <Compile Include="Levels\Easy\RunDownLevel.cs" />
     <Compile Include="Levels\Easy\ConfusingJumpsLevel.cs" />
     <Compile Include="Levels\Easy\JumpsIntroLevel.cs" />
     <Compile Include="Levels\Easy\LevelsSequenceFactory.cs" />

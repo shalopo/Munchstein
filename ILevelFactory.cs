@@ -8,6 +8,6 @@ namespace Munchstein
 {
     public interface ILevelFactory
     {
-        Level Create(ILevelContext levelControl);
+        Level Create(ILevelContext levelContext);
     }
 }

@@ -44,7 +44,7 @@ namespace Munchstein.Levels.Easy
             deathTaunts.Add(platforms.Last(), "Closette but not quite the cigarette");
 
             platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(2, -7), width: 1, height: 1)));
-            platforms.Last().OnActorStanding += actor => levelContext.DisplayMessage("This is getting exciting!");
+            platforms.Last().OnActorStanding += actor => levelContext.DisplayMessage("This is getting exciting! Or is it...");
             deathTaunts.Add(platforms.Last(), "LOL. You knew this would fail");
 
             platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(7, -2.1), width: 1, height: 1)));
@@ -52,7 +52,7 @@ namespace Munchstein.Levels.Easy
             deathTaunts.Add(platforms.Last(), "Are your hands sweaty?");
 
             platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(2, -10), width: 1, height: 1)));
-            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(5.7, -10), width: 2.6, height: 1)));
+            platforms.Add(new Platform(new BoxBoundary(topLeftCube + new Vector2(6, -10), width: 2.3, height: 1)));
 
             platforms.Last().OnActorStanding += actor => levelContext.DisplayMessage("Deep in my heart I always believed in you");
 

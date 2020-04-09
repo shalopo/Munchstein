@@ -14,7 +14,7 @@ namespace Munchstein.Levels.Easy
             {
                 new IntroLevel(),
                 new JumpsIntroLevel(),
-                new TowerLeapLevel(),
+                new RunDownLevel(),
                 new ConfusingJumpsLevel(),
             };
         }

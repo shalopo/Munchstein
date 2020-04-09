@@ -24,6 +24,7 @@ namespace Munchstein
         private readonly ILevel _level;
         public event Action OnDeath;
         public event Action OnJump;
+        public event Action OnDrop;
 
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
@@ -158,7 +159,7 @@ namespace Munchstein
             Velocity = new Vector2(sign * Math.Min(MIN_GROUND_SPEED + (0.02 * _continuousWalkTime), MAX_GROUND_SPEED), 0);
         }
 
-        public void Down()
+        public void Drop()
         {
             UpdateSupportingPlatform();
 
@@ -167,11 +168,16 @@ namespace Munchstein
                 return;
             }
 
+            OnDrop?.Invoke();
+
             if (CurrentPlatform.IsPassThrough)
             {
                 Velocity = new Vector2(Velocity.X, -1);
                 Location += new Vector2(0, - Platform.STANDING_THRESHOLD - 0.01);
             }
+
+            LastPlatform = CurrentPlatform;
+            CurrentPlatform = null;
         }
 
         public void Stop()

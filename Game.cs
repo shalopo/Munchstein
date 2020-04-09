@@ -35,7 +35,7 @@ namespace Munchstein
         DateTime _lastFpsMeasurementTime = DateTime.MinValue;
         int _framesRendered = 0;
         int _fps = 0;
-        bool _showGridlines = false;
+        bool _showGridlineNumbers = false;
 
         //const double MAX_FPS = 60;
         //const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
@@ -44,9 +44,11 @@ namespace Munchstein
         {
             InitializeComponent();
 
-            LevelsSequence = new LevelsSequence { new Levels.Easy.ConfusingJumpsLevel() };
+            LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-            DebugLevel(Levels.Easy.LevelsSequenceFactory.Create());
+
+            DebugLevel(new Levels.Easy.ConfusingJumpsLevel());
+
 
             LevelIndex = 0;
             StartLevel();
@@ -54,10 +56,10 @@ namespace Munchstein
             KeyDown += OnKeyDown;
         }
 
-        private void DebugLevel(LevelsSequence levelsSequence)
+        private void DebugLevel(ILevelFactory levelFactory)
         {
-            _showGridlines = true;
-            LevelsSequence = levelsSequence;
+            _showGridlineNumbers = true;
+            LevelsSequence = new LevelsSequence { levelFactory };
         }
 
         public void DisplayMessage(string msg, int? seconds = null)
@@ -84,11 +86,11 @@ namespace Munchstein
 
         private void StartLevel()
         {
+            InitLevel();
+
             _msgToDisplay = null;
             _hintToDisplay = null;
             _levelReplayContext = new LevelReplayContext();
-
-            InitLevel();
 
             if (_staticGraphics != null)
             {
@@ -124,10 +126,7 @@ namespace Munchstein
 
         void DrawStaticObjects(Graphics g)
         {
-            if (_showGridlines)
-            {
-                DrawGridlines(g);
-            }
+            DrawGridlines(g);
 
             if (Level.Door != null)
             {
@@ -200,16 +199,24 @@ namespace Munchstein
             int MAX_X = Size.Width / DRAW_SCALE;
             int MAX_Y = Size.Height / DRAW_SCALE;
 
-            for (int x = 0; x < MAX_X; x++)
+            for (int x = 0; x <= MAX_X; x++)
             {
                 g.DrawLine(pen, new Point(TransformX(x), 0), new Point(TransformX(x), Height));
-                g.DrawString(x.ToString(), font, Brushes.LightGray, Transform(new Point2(x, 0.2)));
+
+                if (_showGridlineNumbers)
+                {
+                    g.DrawString(x.ToString(), font, Brushes.LightGray, Transform(new Point2(x, 0.2)));
+                }
             }
 
-            for (int y = 0; y < MAX_Y; y++)
+            for (int y = 0; y <= MAX_Y; y++)
             {
                 g.DrawLine(pen, new Point(0, TransformY(y)), new Point(Width, TransformY(y)));
-                g.DrawString(y.ToString(), font, Brushes.LightGray, Transform(new Point2(0, y + 0.2)));
+
+                if (_showGridlineNumbers)
+                {
+                    g.DrawString(y.ToString(), font, Brushes.LightGray, Transform(new Point2(0, y + 0.2)));
+                }
             }
         }
 
@@ -333,7 +340,7 @@ namespace Munchstein
             switch (e.KeyCode)
             {
                 case Keys.Down:
-                    actor.Down();
+                    actor.Drop();
                     break;
                 case Keys.Up:
                     actor.Action();
