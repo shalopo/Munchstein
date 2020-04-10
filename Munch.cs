@@ -10,7 +10,7 @@ namespace Munchstein
     {
         public Munch(Point2 location) => Location = location;
 
-        public double Size => 0.5;
+        public double Size => 1;
 
         public Point2 Location { get; private set; }
         public BoxBoundary Box => new BoxBoundary(topLeft: new Point2(Location.X - Size / 2, Location.Y + Size), Size, Size);

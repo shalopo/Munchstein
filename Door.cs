@@ -12,8 +12,9 @@ namespace Munchstein
 
         public Point2 Location { get; private set; }
 
-        public double Height { get; set; } = 1;
-        public double Width => Height / 2;
+        internal int Size { get; set; } = 1;
+        public double Height => Size;
+        public double Width => Size / 2.0;
         public BoxBoundary Box => new BoxBoundary(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
     }
 }

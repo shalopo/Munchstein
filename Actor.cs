@@ -30,14 +30,14 @@ namespace Munchstein
         public event Action OnDeath;
         public event Action OnJump;
         public event Action OnDrop;
-        public event Action OnSizeUp;
+        public event Action<Munch> OnMunch;
 
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
 
-        private double Size { get; set; } = 1;
+        internal int Size { get; set; } = 1;
         public double Height => Size;
-        public double Width => Size / 2;
+        public double Width => Size / 2.0;
 
         private double SizeFactor => 0.4 + 0.6 * Size;
         double JumpSpeed => SizeFactor * BASE_JUMP_SPEED;
@@ -84,38 +84,36 @@ namespace Munchstein
 
         public void Step(double dt)
         {
-            bool collisions = ApplyCollisions(dt);
+            UpdateSupportingPlatform();
 
-            if (!collisions)
+            if (CurrentPlatform == null)
             {
-                UpdateSupportingPlatform();
+                ApplyAcceleration(GRAVITY, dt);
+                ApplyDrag(dt);
 
-                if (CurrentPlatform != null)
+                Location += dt * Velocity.YProjection;
+            }
+            else
+            {
+                if (Velocity.Y == 0)
                 {
-                    if (Velocity.Y == 0)
-                    {
-                        Location = new Point2(Location.X, CurrentPlatform.Box.Top);
-                    }
-                    else
-                    {
-                        Location += dt * Velocity.YProjection;
-                    }
+                    Location = new Point2(Location.X, CurrentPlatform.Box.Top);
                 }
                 else
                 {
-                    ApplyAcceleration(GRAVITY, dt);
-                    ApplyDrag(dt);
-
                     Location += dt * Velocity.YProjection;
                 }
-
-                Location += dt * Velocity.XProjection;
             }
 
-            if (_level.TryEatMunch(Box) != null)
+            Location += dt * Velocity.XProjection;
+
+            ApplyCollisions(dt);
+
+            var munch = _level.TryEatMunch(Box);
+            if (munch != null)
             {
                 Size *= 2;
-                OnSizeUp?.Invoke();
+                OnMunch?.Invoke(munch);
             }
 
             if (Location.Y <= 0)
@@ -127,12 +125,12 @@ namespace Munchstein
 
         private bool ApplyCollisions(double dt)
         {
-            var disposition = dt * Velocity;
-
             if (Velocity.IsZero)
             {
                 return false;
             }
+
+            var disposition = dt * Velocity;
 
             var collision_box = _level.GetCollisionBox(Box, disposition);
             if (collision_box.IsZero)
@@ -146,7 +144,8 @@ namespace Munchstein
             {
                 Velocity = Velocity.YProjection;
             }
-            else
+
+            if (collision_box.Y != 0)
             {
                 Velocity = Velocity.XProjection;
             }
@@ -211,7 +210,7 @@ namespace Munchstein
             }
 
             var door = _level.GetAdjacentDoor(Box);
-            if (door != null)
+            if (door != null && Size == door.Size)
             {
                 _level.NotifyDoorOpened(door);
             }

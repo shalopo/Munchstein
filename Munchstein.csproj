@@ -67,6 +67,7 @@
     <Compile Include="LevelReplayContext.cs" />
     <Compile Include="LevelsSequence.cs" />
     <Compile Include="Levels\Credits\LevelsSequenceFactory.cs" />
+    <Compile Include="Levels\DebugLevel.cs" />
     <Compile Include="Levels\Easy\FirstMunchLevel.cs" />
     <Compile Include="Levels\Easy\IntroLevel.cs" />
     <Compile Include="Levels\Easy\RunDownLevel.cs" />

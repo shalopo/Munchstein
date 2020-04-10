@@ -43,8 +43,7 @@ namespace Munchstein
 
         public Vector2 CalcualteCollisionBox(Vector2 disposition, BoxBoundary other)
         {
-            if (Overlap(this + disposition, other) && 
-               !Overlap(this, other))
+            if (Overlap(this + disposition, other))
             {
                 if (disposition.X >= 0 && disposition.Y >= 0)
                 {
@@ -81,15 +80,27 @@ namespace Munchstein
         {
             var dispositioned = this + disposition;
 
+            if (other.Top - Bottom <= 0.001 || other.Right - Left <= 0.001)
+            {
+                // mismatch due to floating point errors, ignore
+                return Vector2.ZERO;
+            }
+
             if (Right >= other.Left && Top < other.Bottom)
             {
                 return new Vector2(0, dispositioned.Top - other.Bottom);
             }
 
-            if (Top >= other.Bottom)
+            if (Top > other.Bottom)
             {
                 return new Vector2(dispositioned.Right - other.Left, 0);
             }
+
+            //if (Bottom >= other.Top || Left >= other.Right)
+            //{
+            //    // floating point rounding errors, ignore
+            //    return Vector2.ZERO;
+            //}
 
             return disposition.Slope > (other.BottomLeft - TopRight).Slope ?
                 new Vector2(0, dispositioned.Top - other.Bottom) :

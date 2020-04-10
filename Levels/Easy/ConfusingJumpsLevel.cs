@@ -22,7 +22,7 @@ namespace Munchstein.Levels.Easy
                 Add(Platform.PassThrough(new Point2(3, 3 + (i + 1) * 2), width: 5));
             }
 
-            DeathTaunts.Add(Platforms[1], "Now that's insulting");
+            DeathTaunts.Add(Platforms[1], "You're not grasping the gravity of the situation");
             DeathTaunts.Add(Platforms[2], "You're obviously running out of ideas");
             DeathTaunts.Add(Platforms[3], "It sure looked promising, didn't it?");
             DeathTaunts.Add(Platforms[4], "That was an awkward attempt");
@@ -48,7 +48,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(topLeftCube + new Vector2(2, -10), width: 1));
             Add(Platform.Concrete(topLeftCube + new Vector2(6, -10), width: 2.3));
 
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I always believed in you");
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }
 
         protected override void PostBuild(Level level)

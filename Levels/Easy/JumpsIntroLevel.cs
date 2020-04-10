@@ -17,7 +17,7 @@ namespace Munchstein.Levels.Easy
 
             for (int i = 0; i < 5; i++)
             {
-                Add(Platform.Concrete(new Point2(3 + i * i / 2.7 + 2 * i, 4 + i), width: 1.5));
+                Add(Platform.Concrete(new Point2(3 + i * i / 2.8 + 2 * i, 4 + i), width: 1.5));
             }
 
             Platforms[0].OnActorStanding += actor => LevelContext.DisplayHint(JUMP_HINT);
@@ -30,6 +30,8 @@ namespace Munchstein.Levels.Easy
             };
 
             DeathTaunts.Add(Platforms[Platforms.Count - 2], "You snooze, you lose");
+
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("You're not too old for this after all!");
         }
 
         protected override void PostBuild(Level level)

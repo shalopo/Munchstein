@@ -35,7 +35,8 @@ namespace Munchstein
         DateTime _lastFpsMeasurementTime = DateTime.MinValue;
         int _framesRendered = 0;
         int _fps = 0;
-        bool _showGridlineNumbers = false;
+
+        bool _debug = false;
 
         //const double MAX_FPS = 60;
         //const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
@@ -47,7 +48,8 @@ namespace Munchstein
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
 
-            DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
+            //DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
+            //DebugLevel(new LevelFactory<Levels.DebugLevel>());
 
 
             LevelIndex = 0;
@@ -58,7 +60,7 @@ namespace Munchstein
 
         private void DebugLevel(ILevelFactory levelFactory)
         {
-            _showGridlineNumbers = true;
+            _debug = true;
             LevelsSequence = new LevelsSequence { levelFactory };
         }
 
@@ -111,8 +113,6 @@ namespace Munchstein
 
         public void NotifyLevelComplete()
         {
-            Thread.Sleep(500);
-
             LevelIndex++;
             
             if (LevelIndex >= LevelsSequence.NumLevels)
@@ -191,9 +191,24 @@ namespace Munchstein
             DrawActor(g, Level.Actor);
 
             UpdateFps();
-            g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
+
+            if (_debug)
+            {
+                DrawDebugInfo(g);
+            }
 
             Invalidate();
+        }
+
+        private void DrawDebugInfo(Graphics g)
+        {
+            g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
+
+            var location = Level.Actor.Location;
+            g.DrawString($"({location.X:N3},{location.Y:N3})", new Font("arial", 12), Brushes.White, 40, 0);
+
+            var velocity = Level.Actor.Velocity;
+            g.DrawString($"({velocity.X:N3},{velocity.Y:N3})", new Font("arial", 12), Brushes.White, 200, 0);
         }
 
         private void DrawMunch(Graphics g, Munch munch)
@@ -213,7 +228,7 @@ namespace Munchstein
             {
                 g.DrawLine(pen, new Point(TransformX(x), 0), new Point(TransformX(x), Height));
 
-                if (_showGridlineNumbers)
+                if (_debug)
                 {
                     g.DrawString(x.ToString(), font, Brushes.LightGray, Transform(new Point2(x, 0.2)));
                 }
@@ -223,7 +238,7 @@ namespace Munchstein
             {
                 g.DrawLine(pen, new Point(0, TransformY(y)), new Point(Width, TransformY(y)));
 
-                if (_showGridlineNumbers)
+                if (_debug)
                 {
                     g.DrawString(y.ToString(), font, Brushes.LightGray, Transform(new Point2(0, y + 0.2)));
                 }
@@ -307,7 +322,7 @@ namespace Munchstein
             }
 
             var font = new Font("Courier new", 42);
-            g.DrawString(_msgToDisplay, font, Brushes.Orange, new PointF(40, 60));
+            g.DrawString(_msgToDisplay, font, Brushes.Orange, new RectangleF(40, 60, Width, 200));
 
             return true;
         }
