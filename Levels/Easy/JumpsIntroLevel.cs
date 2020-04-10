@@ -36,8 +36,6 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
-
             level.Actor.OnJump += () =>
             {
                 LevelContext.SuppressHint(JUMP_HINT);

@@ -36,7 +36,6 @@ namespace Munchstein.Levels.Easy
         protected override void PostBuild(Level level)
         {
             level.Actor.CanJump = false;
-            level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
         }
     }
 }

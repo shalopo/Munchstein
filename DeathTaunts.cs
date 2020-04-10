@@ -28,13 +28,16 @@ namespace Munchstein
 
         public void NotifyDeath(Platform platform)
         {
-            if (_taunts.ContainsKey(platform))
+            if (platform == null)
+            {
+                if (_defaultTaunt != null)
+                {
+                    _levelContext.DisplayMessage(_defaultTaunt);
+                }
+            }
+            else if (_taunts.ContainsKey(platform))
             {
                 _levelContext.DisplayMessage(_taunts[platform]);
-            }
-            else
-            {
-                _levelContext.DisplayMessage(_defaultTaunt);
             }
         }
     }

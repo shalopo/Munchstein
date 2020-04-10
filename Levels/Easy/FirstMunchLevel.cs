@@ -18,7 +18,10 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(new Point2(11, 3), width: 1.5, height: 0.3));
             Add(Platform.OneWay(new Point2(7, 7), width: 5.7));
             Add(Platform.PassThrough(new Point2(16, 8), width: 1.2));
+
             Add(Platform.OneWay(new Point2(18.2, 5), width: 1.3));
+            DeathTaunts.Add(Platforms.Last(), "Such lack of creativity");
+
             Add(Platform.OneWay(new Point2(10, 9), width: 4.2));
 
             Add(Platform.OneWay(new Point2(15.5, 9), width: 5.5));
@@ -35,7 +38,10 @@ namespace Munchstein.Levels.Easy
             Add(Platform.OneWay(new Point2(15, 7), width: 1.8));
             Add(Platform.PassThrough(new Point2(9, 4), width: 2.5));
             Add(Platform.PassThrough(new Point2(10.5, 8), width: 2.6));
+
             Add(Platform.PassThrough(new Point2(18.4, 6), width: 1));
+            DeathTaunts.Add(Platforms.Last(), "Failll");
+
             Add(Platform.OneWay(new Point2(14, 5), width: 2.5));
             Add(Platform.PassThrough(new Point2(20, 7), width: 1));
             Add(Platform.PassThrough(new Point2(13.7, 4), width: 1));
@@ -51,15 +57,17 @@ namespace Munchstein.Levels.Easy
 
             Add(Platform.Concrete(new Point2(21, 8), width: 0.3, height: 0.5));
             upperGate = Platforms.Last();
-            upperGate.OnActorStanding += actor => LevelContext.DisplayMessage("Ah! I see you are a man of culture");
+            upperGate.OnActorStanding += actor =>
+            {
+                if (actor.Size == 2)
+                {
+                    LevelContext.DisplayMessage("Ah! I see you are a man of culture");
+                }
+            };
 
             Add(Platform.Concrete(new Point2(21, 15), width: 0.3, height: 2.3));
             Add(Platform.Concrete(new Point2(21, 10.8), width: 0.3, height: 0.8));
             Add(Platform.Concrete(new Point2(23, 4), width: 4, height: 0.3));
-
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage(
-                "Or a woman of culture.\n" +
-                "I don't know, I can't really see...");
         }
 
         protected override void PostBuild(Level level)
@@ -69,12 +77,15 @@ namespace Munchstein.Levels.Easy
 
             Platforms.Last().OnActorStanding += actor =>
             {
-                if (actor.Size != level.Door.Size)
+                if (actor.Size == level.Door.Size)
+                {
+                    LevelContext.DisplayMessage("Or a woman of culture.\n" + "I don't know, I can't really see...");
+                }
+                else
                 {
                     LevelContext.DisplayMessage("You're too small, dummy!");
                 }
             };
-
             level.Actor.OnMunch += (munch) =>
             {
                 if (level.Actor.LastPlatform == upperGate)

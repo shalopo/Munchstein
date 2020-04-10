@@ -28,6 +28,8 @@ namespace Munchstein
 
             PostBuild(level);
 
+            level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
+
             return level;
         }
 

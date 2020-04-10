@@ -50,10 +50,5 @@ namespace Munchstein.Levels.Easy
 
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }
-
-        protected override void PostBuild(Level level)
-        {
-            level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
-        }
     }
 }
