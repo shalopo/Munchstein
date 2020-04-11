@@ -136,15 +136,16 @@ namespace Munchstein
             {
                 Location -= collisionVector;
 
-                //TODO: ricochet - negate the collision velocity
+                const double COLLISION_VELOCITY_LOSS_FACTOR = 0.75;
+
                 if (collisionVector.X != 0)
                 {
-                    Velocity = Velocity.YProjection;
+                    Velocity = Velocity.YProjection - Velocity.XProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
                 }
 
                 if (collisionVector.Y != 0)
                 {
-                    Velocity = Velocity.XProjection;
+                    Velocity = Velocity.XProjection - Velocity.YProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
                 }
             }
         }
