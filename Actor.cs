@@ -130,7 +130,7 @@ namespace Munchstein
                 return;
             }
 
-            Vector2 collisionVector = Vector2.ZERO;
+            Vector2 collisionVector;
 
             while (!(collisionVector = _level.GetCollisionVector(Box, dt * Velocity)).IsZero)
             {
