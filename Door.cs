@@ -10,7 +10,7 @@ namespace Munchstein
     {
         public Door(Point2 location) => Location = location;
 
-        public Point2 Location { get; private set; }
+        public Point2 Location { get; internal set; }
 
         internal int Size { get; set; } = 1;
         public double Height => Size;

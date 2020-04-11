@@ -20,9 +20,14 @@ namespace Munchstein
 
         private Platform(Box2 box) => Box = box;
 
-        public static Platform Concrete(Point2 topLeft, double width, double height = 1)
+        public static Platform Concrete(Point2 topLeft, double width, double height = 0.3)
         {
             return new Platform(new Box2(topLeft: topLeft, width: width, height: height));
+        }
+
+        public static Platform ConcretePoint(Point2 bottomLeft)
+        {
+            return new Platform(new Box2(topLeft: bottomLeft + new Vector2(0, 0.1), width: 0.1, height: 0.1));
         }
 
         public static Platform PassThrough(Point2 topLeft, double width)

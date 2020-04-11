@@ -14,7 +14,11 @@ namespace Munchstein
 
         protected IReadOnlyList<Platform> Platforms => _platforms;
 
-        protected void Add(Platform platform) => _platforms.Add(platform);
+        protected Platform Add(Platform platform)
+        {
+            _platforms.Add(platform);
+            return platform;
+        }
 
         public Level Create(ILevelContext levelContext)
         {

@@ -29,23 +29,23 @@ namespace Munchstein.Levels.Easy
             DeathTaunts.Add(Platforms[5], "You were trained to do this right");
 
             var topLeftCube = new Point2(11.2, 13);
-            Add(Platform.Concrete(new Point2(10.5, 13), width: 1));
+            Add(Platform.Concrete(new Point2(10.5, 13), width: 1, height: 1));
             DeathTaunts.Add(Platforms.Last(), "Real smooth...");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(3.9, -4.3), width: 1));
+            Add(Platform.Concrete(topLeftCube + new Vector2(3.9, -4.3), width: 1, height: 1));
 
             Add(Platform.Concrete(topLeftCube + new Vector2(6.1, -6), width: 2, height: 2));
             DeathTaunts.Add(Platforms.Last(), "Closette but not quite the cigarette");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(2, -7), width: 1));
+            Add(Platform.Concrete(topLeftCube + new Vector2(2, -7), width: 1, height: 1));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("This is getting exciting! Or is it...");
             DeathTaunts.Add(Platforms.Last(), "LOL. You knew this would fail");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(7, -2.5), width: 1));
+            Add(Platform.Concrete(topLeftCube + new Vector2(7, -2.5), width: 1, height: 1));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Finally! You did another pointless move");
             DeathTaunts.Add(Platforms.Last(), "Are your hands sweaty?");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(2.1, -10), width: 1));
+            Add(Platform.Concrete(topLeftCube + new Vector2(2.1, -10), width: 1, height: 1));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Don't blink now!");
 
             Add(Platform.Concrete(topLeftCube + new Vector2(6.2, -10), width: 2.3));
