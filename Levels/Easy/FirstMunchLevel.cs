@@ -63,7 +63,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.Concrete(new Point2(21, 15), width: 0.3, height: 2.3));
+            Add(Platform.Concrete(new Point2(21, 16.5), width: 0.3, height: 4));
             Add(Platform.Concrete(new Point2(21, 10.8), width: 0.3, height: 0.8));
             Add(Platform.Concrete(new Point2(15.1, 11.2), width: 0.3, height: 0.3));
             Add(Platform.Concrete(new Point2(17.5, 11.5), width: 0.3, height: 0.3));
