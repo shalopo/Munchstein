@@ -33,7 +33,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(14.5, 6), width: 2.3));
+            Add(Platform.PassThrough(new Point2(14.5, 6), width: 1));
             Add(Platform.OneWay(new Point2(19, 8), width: 1.3));
             Add(Platform.OneWay(new Point2(15, 7), width: 1.8));
             Add(Platform.PassThrough(new Point2(9, 4), width: 2.5));
