@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Munchstein
         ILevelFactory LevelFactory => LevelsSequence[LevelIndex];
         Level Level { get; set; }
         BufferedGraphics _staticGraphics;
+        bool _paused = false;
 
         LevelReplayContext _levelReplayContext;
 
@@ -36,7 +38,7 @@ namespace Munchstein
         int _framesRendered = 0;
         int _fps = 0;
 
-        bool _debug = false;
+        bool _debug = Debugger.IsAttached;
 
         public Game()
         {
@@ -44,10 +46,7 @@ namespace Munchstein
 
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-
-            DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
             //DebugLevel(new LevelFactory<Levels.DebugLevel>());
-
 
             LevelIndex = 0;
             StartLevel();
@@ -105,8 +104,13 @@ namespace Munchstein
 
         public void NotifyLevelComplete()
         {
+            NextLevel();
+        }
+
+        private void NextLevel()
+        {
             LevelIndex++;
-            
+
             if (LevelIndex >= LevelsSequence.NumLevels)
             {
                 LevelsSequence = Levels.Credits.LevelsSequenceFactory.Create();
@@ -135,6 +139,11 @@ namespace Munchstein
         {
             base.OnResize(e);
 
+            RerenderStaticGraphics();
+        }
+
+        private void RerenderStaticGraphics()
+        {
             DisposeStaticGraphicsBuffer();
             RenderStaticGraphicsBuffer();
         }
@@ -178,7 +187,11 @@ namespace Munchstein
             for (int i = 0; i < num_steps; i++)
             {
                 HandleContinuousKeys();
-                Level.Step(0.01);
+
+                if (!_paused)
+                {
+                    Level.Step(0.01);
+                }
             }
 
             if (!DrawMessage(g))
@@ -200,7 +213,17 @@ namespace Munchstein
                 DrawDebugInfo(g);
             }
 
+            if (_paused)
+            {
+                DrawPausedIndication(g);
+            }
+
             Invalidate();
+        }
+
+        private void DrawPausedIndication(Graphics g)
+        {
+            g.DrawString("paused", new Font("arial", 12), Brushes.Red, 500, 0);
         }
 
         private void DrawDebugInfo(Graphics g)
@@ -383,10 +406,30 @@ namespace Munchstein
                 case Keys.R:
                     RestartLevel();
                     break;
+                case Keys.P:
+                    PauseUnpause();
+                    break;
+                case Keys.J:
+                    if (e.Control && e.Shift)
+                    {
+                        NextLevel();
+                    }
+                    break;
+                case Keys.D:
+                    if (e.Control && e.Shift)
+                    {
+                        _debug = !_debug;
+                        RerenderStaticGraphics();
+                    }
+                    break;
                 default:
                     break;
             }
         }
 
+        private void PauseUnpause()
+        {
+            _paused = !_paused;
+        }
     }
 }
