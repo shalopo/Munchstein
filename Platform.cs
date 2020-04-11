@@ -8,7 +8,7 @@ namespace Munchstein
 {
     public enum PlatformType
     {
-        CONCRENT,
+        CONCRETE,
         PASSTHROUGH,
         ONEWAY,
     }

@@ -46,18 +46,12 @@ namespace Munchstein
 
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-            //DebugLevel(new LevelFactory<Levels.DebugLevel>());
+            LevelsSequence = new LevelsSequence { new LevelFactory<Levels.DebugLevel>() };
 
             LevelIndex = 0;
             StartLevel();
 
             KeyDown += OnKeyDown;
-        }
-
-        private void DebugLevel(ILevelFactory levelFactory)
-        {
-            _debug = true;
-            LevelsSequence = new LevelsSequence { levelFactory };
         }
 
         public void DisplayMessage(string msg, int? seconds = null)
@@ -231,10 +225,10 @@ namespace Munchstein
             g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
 
             var location = Level.Actor.Location;
-            g.DrawString($"({location.X:N3},{location.Y:N3})", new Font("arial", 12), Brushes.White, 40, 0);
+            g.DrawString($"({location.X:N4},{location.Y:N4})", new Font("arial", 12), Brushes.White, 40, 0);
 
             var velocity = Level.Actor.Velocity;
-            g.DrawString($"({velocity.X:N3},{velocity.Y:N3})", new Font("arial", 12), Brushes.White, 200, 0);
+            g.DrawString($"({velocity.X:N4},{velocity.Y:N4})", new Font("arial", 12), Brushes.White, 200, 0);
         }
 
         private void DrawMunch(Graphics g, Munch munch)
@@ -312,7 +306,7 @@ namespace Munchstein
         {
             switch (platform.Type)
             {
-                case PlatformType.CONCRENT:
+                case PlatformType.CONCRETE:
                     g.FillRectangle(Brushes.White, Transform(platform.Box));
                     break;
                 case PlatformType.PASSTHROUGH:
@@ -420,6 +414,18 @@ namespace Munchstein
                     {
                         _debug = !_debug;
                         RerenderStaticGraphics();
+                    }
+                    break;
+                case Keys.OemPeriod:
+                    if (_debug && e.Control && e.Shift)
+                    {
+                        Level.Actor.Location += new Vector2(0.05, 0);
+                    }
+                    break;
+                case Keys.Oemcomma:
+                    if (_debug && e.Control && e.Shift)
+                    {
+                        Level.Actor.Location += new Vector2(-0.05, 0);
                     }
                     break;
                 default:

@@ -123,34 +123,30 @@ namespace Munchstein
             }
         }
 
-        private bool ApplyCollisions(double dt)
+        private void ApplyCollisions(double dt)
         {
             if (Velocity.IsZero)
             {
-                return false;
+                return;
             }
 
-            var disposition = dt * Velocity;
+            Vector2 collisionVector = Vector2.ZERO;
 
-            var collision_box = _level.GetCollisionBox(Box, disposition);
-            if (collision_box.IsZero)
+            while (!(collisionVector = _level.GetCollisionVector(Box, dt * Velocity)).IsZero)
             {
-                return false;
+                Location -= collisionVector;
+
+                //TODO: ricochet - negate the collision velocity
+                if (collisionVector.X != 0)
+                {
+                    Velocity = Velocity.YProjection;
+                }
+
+                if (collisionVector.Y != 0)
+                {
+                    Velocity = Velocity.XProjection;
+                }
             }
-
-            Location += disposition - collision_box;
-
-            if (collision_box.X != 0)
-            {
-                Velocity = Velocity.YProjection;
-            }
-
-            if (collision_box.Y != 0)
-            {
-                Velocity = Velocity.XProjection;
-            }
-
-            return true;
         }
 
         public void MoveSideways(int sign)

@@ -25,18 +25,17 @@ namespace Munchstein
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
 
-        Vector2 ILevel.GetCollisionBox(Box2 box, Vector2 disposition)
+        Vector2 ILevel.GetCollisionVector(Box2 box, Vector2 disposition)
         {
             foreach (Platform platform in _platforms)
             {
-                if (platform.Type == PlatformType.CONCRENT)
+                if (platform.Type == PlatformType.CONCRETE)
                 {
-                    var collision_box = box.CalcualteCollisionBox(disposition, platform.Box);
+                    var collisionVector = box.CalcualteCollisionVector(disposition, platform.Box);
 
-                    //TODO: We assume there can be only one collision which is not always the case
-                    if (!collision_box.IsZero)
+                    if (!collisionVector.IsZero)
                     {
-                        return collision_box;
+                        return collisionVector;
                     }
                 }
             }
@@ -46,9 +45,11 @@ namespace Munchstein
 
         Platform ILevel.GetSupportingPlatform(Box2 box)
         {
+            const double COLLISION_THRESHOLD = Box2.COLLISION_THRESHOLD;
+
             foreach (Platform platform in _platforms)
             {
-                if (box.Right > platform.Box.Left && box.Left < platform.Box.Right)
+                if (box.Right - platform.Box.Left >= COLLISION_THRESHOLD && platform.Box.Right - box.Left >= COLLISION_THRESHOLD)
                 {
                     if (Math.Abs(box.Bottom - platform.Box.Top) <= Platform.STANDING_THRESHOLD)
                     {
