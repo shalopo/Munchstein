@@ -38,8 +38,8 @@ namespace Munchstein
 
         bool _debug = false;
 
-        //const double MAX_FPS = 60;
-        //const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
+        const double MAX_FPS = 60;
+        const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
 
         public Game()
         {
@@ -48,7 +48,7 @@ namespace Munchstein
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
 
-            //DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
+            DebugLevel(new LevelFactory<Levels.Easy.FirstMunchLevel>());
             //DebugLevel(new LevelFactory<Levels.DebugLevel>());
 
 
@@ -156,25 +156,14 @@ namespace Munchstein
 
             var renderTimeDiff = DateTime.UtcNow - _lastRenderTime;
 
-            //if (renderTimeDiff.TotalMilliseconds < MIN_RENDER_MS_DIFF)
-            //{
-            //    var sleep_ms = (int)Math.Round(MIN_RENDER_MS_DIFF - renderTimeDiff.TotalMilliseconds);
-            //    Thread.Sleep(sleep_ms);
-
-            //    g.DrawString(sleep_ms.ToString(), new Font("arial", 12), Brushes.White, 0, 10);
-            //    //renderTimeDiff += new TimeSpan(0, 0, 0, 0, sleep_ms);
-            //    renderTimeDiff = DateTime.UtcNow - _lastRenderTime;
-            //}
-
             _lastRenderTime = DateTime.UtcNow;
-
-            HandleContinuousKeys();
 
             const int STEPS_PER_SECOND = 200;
             var num_steps = (int)Math.Round(STEPS_PER_SECOND / 1000.0 * renderTimeDiff.TotalMilliseconds);
 
             for (int i = 0; i < num_steps; i++)
             {
+                HandleContinuousKeys();
                 Level.Step(0.01);
             }
 
