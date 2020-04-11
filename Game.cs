@@ -38,9 +38,6 @@ namespace Munchstein
 
         bool _debug = false;
 
-        const double MAX_FPS = 60;
-        const double MIN_RENDER_MS_DIFF = 1000.0 / MAX_FPS;
-
         public Game()
         {
             InitializeComponent();
@@ -93,12 +90,7 @@ namespace Munchstein
             _msgToDisplay = null;
             _hintToDisplay = null;
             _levelReplayContext = new LevelReplayContext();
-
-            if (_staticGraphics != null)
-            {
-                _staticGraphics.Dispose();
-                _staticGraphics = null;
-            }
+            DisposeStaticGraphicsBuffer();
         }
 
         private void InitLevel()
@@ -139,20 +131,42 @@ namespace Munchstein
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnResize(EventArgs e)
         {
-            base.OnPaint(e);
+            base.OnResize(e);
 
-            if (_staticGraphics == null)
+            DisposeStaticGraphicsBuffer();
+            RenderStaticGraphicsBuffer();
+        }
+
+        private BufferedGraphics RenderStaticGraphicsBuffer()
+        {
+            if (_staticGraphics == null && Level != null)
             {
                 _staticGraphics = BufferedGraphicsManager.Current.Allocate(CreateGraphics(), DisplayRectangle);
                 DrawStaticObjects(_staticGraphics.Graphics);
                 _staticGraphics.Render();
             }
 
+            return _staticGraphics;
+        }
+
+        private void DisposeStaticGraphicsBuffer()
+        {
+            if (_staticGraphics != null)
+            {
+                _staticGraphics.Dispose();
+                _staticGraphics = null;
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
             var g = e.Graphics;
 
-            _staticGraphics.Render(g);
+            RenderStaticGraphicsBuffer().Render(g);
 
             var renderTimeDiff = DateTime.UtcNow - _lastRenderTime;
 
