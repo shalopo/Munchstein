@@ -25,7 +25,7 @@ namespace Munchstein
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
 
-        Vector2 ILevel.GetCollisionBox(BoxBoundary box, Vector2 disposition)
+        Vector2 ILevel.GetCollisionBox(Box2 box, Vector2 disposition)
         {
             foreach (Platform platform in _platforms)
             {
@@ -44,7 +44,7 @@ namespace Munchstein
             return Vector2.ZERO;
         }
 
-        Platform ILevel.GetSupportingPlatform(BoxBoundary box)
+        Platform ILevel.GetSupportingPlatform(Box2 box)
         {
             foreach (Platform platform in _platforms)
             {
@@ -60,9 +60,9 @@ namespace Munchstein
             return null;
         }
 
-        Door ILevel.GetAdjacentDoor(BoxBoundary box)
+        Door ILevel.GetAdjacentDoor(Box2 box)
         {
-            if (Door != null && BoxBoundary.Overlap(Door.Box, box))
+            if (Door != null && Box2.Overlap(Door.Box, box))
             {
                 return Door;
             }
@@ -80,9 +80,9 @@ namespace Munchstein
             _levelControl.RestartLevel();
         }
 
-        Munch ILevel.TryEatMunch(BoxBoundary box)
+        Munch ILevel.TryEatMunch(Box2 box)
         {
-            if (Munch != null && BoxBoundary.Overlap(Munch.Box, box))
+            if (Munch != null && Box2.Overlap(Munch.Box, box))
             {
                 var munch = Munch;
                 Munch = null;

@@ -13,6 +13,6 @@ namespace Munchstein
         public double Size => 1;
 
         public Point2 Location { get; private set; }
-        public BoxBoundary Box => new BoxBoundary(topLeft: new Point2(Location.X - Size / 2, Location.Y + Size), Size, Size);
+        public Box2 Box => new Box2(topLeft: new Point2(Location.X - Size / 2, Location.Y + Size), Size, Size);
     }
 }

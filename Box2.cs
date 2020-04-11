@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Munchstein
 {
-    public struct BoxBoundary
+    public struct Box2
     {
-        public BoxBoundary(Point2 topLeft, double width, double height)
+        public Box2(Point2 topLeft, double width, double height)
         {
             TopLeft = topLeft;
             Width = width;
@@ -28,12 +28,12 @@ namespace Munchstein
         public Point2 TopRight => new Point2(Right, Top);
         public Vector2 Size => new Vector2(Width, Height);
 
-        private BoxBoundary YMirror => new BoxBoundary(new Point2(Left, -Bottom), Width, Height);
-        private BoxBoundary XMirror => new BoxBoundary(new Point2(-Right, Top), Width, Height);
-        private BoxBoundary Mirror => new BoxBoundary(new Point2(-Right, -Bottom), Width, Height);
+        private Box2 YMirror => new Box2(new Point2(Left, -Bottom), Width, Height);
+        private Box2 XMirror => new Box2(new Point2(-Right, Top), Width, Height);
+        private Box2 Mirror => new Box2(new Point2(-Right, -Bottom), Width, Height);
 
-        public static BoxBoundary operator +(BoxBoundary box, Vector2 disposition) =>
-            new BoxBoundary(box.TopLeft + disposition, width: box.Width, height: box.Height);
+        public static Box2 operator +(Box2 box, Vector2 disposition) =>
+            new Box2(box.TopLeft + disposition, width: box.Width, height: box.Height);
 
         public bool Contains(Point2 point)
         {
@@ -41,7 +41,7 @@ namespace Munchstein
                    Bottom <= point.Y && point.Y <= Top;
         }
 
-        public Vector2 CalcualteCollisionBox(Vector2 disposition, BoxBoundary other)
+        public Vector2 CalcualteCollisionBox(Vector2 disposition, Box2 other)
         {
             if (Overlap(this + disposition, other))
             {
@@ -68,7 +68,7 @@ namespace Munchstein
             }
         }
 
-        public static bool Overlap(BoxBoundary a, BoxBoundary b)
+        public static bool Overlap(Box2 a, Box2 b)
         {
             return a.Right > b.Left &&
                    a.Left < b.Right &&
@@ -76,7 +76,7 @@ namespace Munchstein
                    a.Bottom < b.Top; 
         }
 
-        public Vector2 CalcualteCollisionBoxInternal(Vector2 disposition, BoxBoundary other)
+        public Vector2 CalcualteCollisionBoxInternal(Vector2 disposition, Box2 other)
         {
             var dispositioned = this + disposition;
 

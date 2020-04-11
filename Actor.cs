@@ -43,7 +43,7 @@ namespace Munchstein
         double JumpSpeed => SizeFactor * BASE_JUMP_SPEED;
         double MaxGroundSpeed => SizeFactor * BASE_MAX_GROUND_SPEED;
         double GroundAcceleration => SizeFactor * BASE_GROUND_ACCELERATION;
-        public BoxBoundary Box => new BoxBoundary(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
+        public Box2 Box => new Box2(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
 
         public void ApplyAcceleration(Vector2 acceleration, double dt)
         {

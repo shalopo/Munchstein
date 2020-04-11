@@ -303,7 +303,7 @@ namespace Munchstein
             return new Size((int)Math.Round(v.X * DRAW_SCALE), (int)Math.Round(v.Y * DRAW_SCALE));
         }
 
-        private Rectangle Transform(BoxBoundary box)
+        private Rectangle Transform(Box2 box)
         {
             return new Rectangle(Transform(box.TopLeft), Transform(box.Size));
         }
