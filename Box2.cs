@@ -40,30 +40,30 @@ namespace Munchstein
 
         public static Box2 operator -(Box2 box, Vector2 disposition) => box + (-disposition);
 
-        public Vector2 CalcualteCollisionVector(Vector2 disposition, Box2 other)
+        public Collision CalcualteCollision(Vector2 disposition, Box2 other)
         {
             if (Overlap(this, other))
             {
                 if (disposition.X >= 0 && disposition.Y >= 0)
                 {
-                    return CalcualteCollisionVectorInternal(disposition, other);
+                    return CalcualteCollisionInternal(disposition, other);
                 }
                 else if (disposition.Y < 0 && disposition.X >= 0)
                 {
-                    return YMirror.CalcualteCollisionVector(disposition.YMirror, other.YMirror).YMirror;
+                    return YMirror.CalcualteCollision(disposition.YMirror, other.YMirror).YMirror;
                 }
                 else if (disposition.X < 0 && disposition.Y >= 0)
                 {
-                    return XMirror.CalcualteCollisionVector(disposition.XMirror, other.XMirror).XMirror;
+                    return XMirror.CalcualteCollision(disposition.XMirror, other.XMirror).XMirror;
                 }
                 else
                 {
-                    return -Mirror.CalcualteCollisionVector(-disposition, other.Mirror);
+                    return Mirror.CalcualteCollision(-disposition, other.Mirror).Mirror;
                 }
             }
             else
             {
-                return Vector2.ZERO;
+                return Collision.NONE;
             }
         }
 
@@ -75,29 +75,31 @@ namespace Munchstein
                    b.Top - a.Bottom >= COLLISION_THRESHOLD;
         }
 
-        public Vector2 CalcualteCollisionVectorInternal(Vector2 disposition, Box2 other)
+        public Collision CalcualteCollisionInternal(Vector2 disposition, Box2 other)
         {
             var preDispositioned = this - disposition;
 
             if (other.Top - preDispositioned.Bottom <= COLLISION_THRESHOLD || other.Right - preDispositioned.Left <= COLLISION_THRESHOLD)
             {
                 // mismatch due to floating point errors, ignore
-                return Vector2.ZERO;
+                return Collision.NONE;
             }
 
             if (other.Left - preDispositioned.Right <= COLLISION_THRESHOLD && preDispositioned.Top - other.Bottom < COLLISION_THRESHOLD)
             {
-                return new Vector2(0, Top - other.Bottom);
+                return new Collision(new Vector2(0, Top - other.Bottom), 
+                    lineLength: Math.Min(Right, other.Right) - Math.Max(Left, other.Left));
             }
 
             if (preDispositioned.Top - other.Bottom > COLLISION_THRESHOLD)
             {
-                return new Vector2(Right - other.Left, 0);
+                return new Collision(new Vector2(Right - other.Left, 0),
+                    lineLength: Math.Min(Top, other.Top) - Math.Max(Bottom, other.Bottom));
             }
 
             return disposition.Slope > (other.BottomLeft - TopRight).Slope ?
-                new Vector2(0, Top - other.Bottom) :
-                new Vector2(Right - other.Left, 0);
+                new Collision(new Vector2(0, Top - other.Bottom), lineLength: double.NaN) :
+                new Collision(new Vector2(Right - other.Left, 0), lineLength: double.NaN);
         }
     }
 }

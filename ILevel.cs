@@ -3,7 +3,7 @@
     public interface ILevel
     {
         Platform GetSupportingPlatform(Box2 box);
-        Vector2 GetCollisionVector(Box2 box, Vector2 disposition);
+        Collision GetCollision(Box2 box, Vector2 disposition);
         Door GetAdjacentDoor(Box2 box);
         Munch TryEatMunch(Box2 box);
 

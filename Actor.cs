@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Munchstein
 {
+    enum ActorOrientation
+    {
+        TALL,
+        FLAT,
+    }
 
     public class Actor
     {
@@ -22,6 +27,7 @@ namespace Munchstein
         public Point2 Location { get; internal set; }
         public Vector2 Velocity { get; internal set; }
         public bool CanJump { get; set; } = true;
+        public bool CanChangeOrientation { get; set; } = false;
 
         private int _lastWalkSign = 0;
         private int _continuousWalkTime = 0;
@@ -36,12 +42,13 @@ namespace Munchstein
         public Platform LastPlatform { get; private set; }
 
         internal int Size { get; set; } = 1;
-        public double Height => Size;
-        public double Width => Size / 2.0;
+        internal ActorOrientation Orientation { get; set; } = ActorOrientation.TALL;
+        public double Height => Orientation == ActorOrientation.TALL ? Size : Size / 2.0;
+        public double Width => Orientation == ActorOrientation.TALL ? Size / 2.0 : Size;
 
         private double SizeFactor => 0.4 + 0.6 * Size;
-        double JumpSpeed => SizeFactor * BASE_JUMP_SPEED;
-        double MaxGroundSpeed => SizeFactor * BASE_MAX_GROUND_SPEED;
+        double JumpSpeed => (Orientation == ActorOrientation.TALL ? BASE_JUMP_SPEED : BASE_MAX_GROUND_SPEED) * SizeFactor;
+        double MaxGroundSpeed => (Orientation == ActorOrientation.TALL ? BASE_MAX_GROUND_SPEED : BASE_JUMP_SPEED) * SizeFactor;
         double GroundAcceleration => SizeFactor * BASE_GROUND_ACCELERATION;
         public Box2 Box => new Box2(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
 
@@ -130,20 +137,43 @@ namespace Munchstein
                 return;
             }
 
-            Vector2 collisionVector;
+            Collision collision;
 
-            while (!(collisionVector = _level.GetCollisionVector(Box, dt * Velocity)).IsZero)
+            while (!(collision = _level.GetCollision(Box, dt * Velocity)).IsNone)
             {
-                Location -= collisionVector;
+                _continuousWalkTime = 0;
+
+                Location -= collision.Vector;
+
+                if (CanChangeOrientation && collision.LineLength != double.NaN && 
+                    collision.LineLength <= Platform.MIN_WIDTH_TO_STAND_ON + 0.001)
+                {
+                    switch (Orientation)
+                    {
+                        case ActorOrientation.TALL:
+                            if (collision.Vector.X != 0 && Math.Abs(Velocity.X) >= MaxGroundSpeed)
+                            {
+                                Orientation = ActorOrientation.FLAT;
+                            }
+                            break;
+                        case ActorOrientation.FLAT:
+                            if (collision.Vector.Y != 0 && Math.Abs(Velocity.Y) >= MaxGroundSpeed * 0.7)
+                            {
+                                Orientation = ActorOrientation.TALL;
+                            }
+                            break;
+                    }
+                }
+
 
                 const double COLLISION_VELOCITY_LOSS_FACTOR = 0.75;
 
-                if (collisionVector.X != 0)
+                if (collision.Vector.X != 0)
                 {
                     Velocity = Velocity.YProjection - Velocity.XProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
                 }
 
-                if (collisionVector.Y != 0)
+                if (collision.Vector.Y != 0)
                 {
                     Velocity = Velocity.XProjection - Velocity.YProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
                 }
@@ -187,7 +217,7 @@ namespace Munchstein
             if (CurrentPlatform.Type == PlatformType.PASSTHROUGH)
             {
                 Velocity = new Vector2(Velocity.X, -1);
-                Location += new Vector2(0, - Platform.STANDING_THRESHOLD - 0.01);
+                Location += new Vector2(0, - Platform.STAND_DETECTION_THRESHOLD - 0.01);
             }
 
             LastPlatform = CurrentPlatform;

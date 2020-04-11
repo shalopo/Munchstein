@@ -46,7 +46,7 @@ namespace Munchstein
 
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-            //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.DebugLevel>() };
+            LevelsSequence = new LevelsSequence { new LevelFactory<Levels.DebugLevel>() };
 
             LevelIndex = 0;
             StartLevel();
@@ -178,12 +178,11 @@ namespace Munchstein
             const int STEPS_PER_SECOND = 200;
             var num_steps = (int)Math.Round(STEPS_PER_SECOND / 1000.0 * renderTimeDiff.TotalMilliseconds);
 
-            for (int i = 0; i < num_steps; i++)
+            if (!_paused)
             {
-                HandleContinuousKeys();
-
-                if (!_paused)
+                for (int i = 0; i < num_steps; i++)
                 {
+                    HandleContinuousKeys();
                     Level.Step(0.01);
                 }
             }

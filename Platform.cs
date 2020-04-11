@@ -15,7 +15,8 @@ namespace Munchstein
 
     public class Platform
     {
-        public static readonly double STANDING_THRESHOLD = 0.1;
+        public static readonly double MIN_WIDTH_TO_STAND_ON = 0.2;
+        public static readonly double STAND_DETECTION_THRESHOLD = 0.09;
 
         private Platform(Box2 box) => Box = box;
 

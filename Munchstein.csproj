@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="Box2.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="DeathTaunts.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="Game.cs">
