@@ -157,7 +157,7 @@ namespace Munchstein
                             }
                             break;
                         case ActorOrientation.FLAT:
-                            if (collision.Vector.Y != 0 && Math.Abs(Velocity.Y) >= MaxGroundSpeed * 0.5)
+                            if (collision.Vector.Y != 0 && Math.Abs(Velocity.Y) >= MaxGroundSpeed * 0.6)
                             {
                                 Orientation = ActorOrientation.TALL;
                             }
@@ -237,7 +237,7 @@ namespace Munchstein
             }
 
             var door = _level.GetAdjacentDoor(Box);
-            if (door != null && Size == door.Size)
+            if (door != null && Size == door.Size && Orientation == ActorOrientation.TALL)
             {
                 _level.NotifyDoorOpened(door);
             }

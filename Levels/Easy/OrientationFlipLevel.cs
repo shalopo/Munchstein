@@ -12,33 +12,40 @@ namespace Munchstein.Levels.Easy
 
         protected override void Build()
         {
-            Add(Platform.OneWay(new Point2(2, 8.5), width: 10));
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(6.5, 10)));
-            Add(Platform.PassThrough(new Point2(6.5, 10), width: 4.5));
-            Add(Platform.Concrete(new Point2(19, 3), width: 3));
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(19, 3.9)));
-            Add(Platform.PassThrough(new Point2(22, 5), width: 1));
-            Add(Platform.PassThrough(new Point2(23, 7), width: 1));
-            Add(Platform.PassThrough(new Point2(18, 9), width: 10));
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(27, 9.9)));
-            Add(Platform.PassThrough(new Point2(6, 5), width: 5));
-            munchPlatform = Add(Platform.Concrete(new Point2(3, 1), width: 9));
+            Add(Platform.OneWay(new Point2(2, 7.5), width: 9.8));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(6.5, 9)));
+            Add(Platform.PassThrough(new Point2(6.5, 9), width: 4.5));
+            Add(Platform.Concrete(new Point2(19, 2), width: 3));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(19, 2.9)));
+            Add(Platform.PassThrough(new Point2(22, 4), width: 1));
+            Add(Platform.PassThrough(new Point2(23, 6), width: 1));
+            Add(Platform.OneWay(new Point2(18, 8), width: 10));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.9)));
+            Add(Platform.PassThrough(new Point2(8, 4), width: 3));
+            munchPlatform = Add(Platform.Concrete(new Point2(1, 1), width: 11));
             Add(Platform.ConcretePoint(bottomLeft: new Point2(4, 2)));
-            Add(Platform.Concrete(new Point2(14, 12), width: 3));
-            Add(Platform.Concrete(new Point2(7, 12.5), width: 6));
-            Add(Platform.Concrete(new Point2(4, 12), width: 0.3, height: 2.5));
-            Add(Platform.PassThrough(new Point2(1, 11.1), width: 3));
+            Add(Platform.Concrete(new Point2(7.5, 11.2), width: 5.5));
+            Add(Platform.Concrete(new Point2(13, 9.9), width: 1, height: 0.3));
+            Add(Platform.Concrete(new Point2(13, 13), width: 0.3, height: 0.9));
+            Add(Platform.PassThrough(new Point2(22, 10), width: 4));
+            Add(Platform.PassThrough(new Point2(21, 12), width: 8));
+            Add(Platform.Concrete(new Point2(2, 8.8), width: 3));
+            Add(Platform.PassThrough(new Point2(2, 9), width: 3));
+            Add(Platform.PassThrough(new Point2(2, 11), width: 2));
+            Add(Platform.PassThrough(new Point2(12, 14.5), width: 2));
         }
 
         protected override void PostBuild(Level level)
         {
-            //level.Actor.Size = 2;
+            //level.Actor.Location = new Point2(8, 9);
             //level.Actor.Orientation = ActorOrientation.FLAT;
+            //level.Actor.Size = 2;
+
             level.Actor.CanChangeOrientation = true;
             level.Door.Size = 2;
             level.Door.Location -= Vector2.X_UNIT;
 
-            level.Munch = new Munch(new Point2(9, 1.5));
+            level.Munch = new Munch(new Point2(9, 2.5));
         }
     }
 }
