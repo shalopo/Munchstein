@@ -16,7 +16,7 @@ namespace Munchstein
 {
     public partial class Game : Form, ILevelContext
     {
-        static readonly int DRAW_SCALE = 64;
+        int DRAW_SCALE = 64;
 
         LevelsSequence LevelsSequence { get; set; }
         int LevelIndex { get; set; }
@@ -134,6 +134,7 @@ namespace Munchstein
         {
             base.OnResize(e);
 
+            DRAW_SCALE = Math.Min(Width / 30, Height / 18);
             RerenderStaticGraphics();
         }
 
@@ -342,7 +343,7 @@ namespace Munchstein
             }
 
             var font = new Font("Courier new", 42);
-            g.DrawString(_msgToDisplay, font, Brushes.Orange, new RectangleF(40, 60, Width, 200));
+            g.DrawString(_msgToDisplay, font, Brushes.Orange, new RectangleF(40, 60, Width, DRAW_SCALE * 4));
 
             return true;
         }
