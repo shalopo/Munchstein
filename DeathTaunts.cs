@@ -30,14 +30,16 @@ namespace Munchstein
         {
             if (platform == null)
             {
-                if (_defaultTaunt != null)
-                {
-                    _levelContext.DisplayMessage(_defaultTaunt);
-                }
+                return;
             }
-            else if (_taunts.ContainsKey(platform))
+
+            if (_taunts.ContainsKey(platform))
             {
                 _levelContext.DisplayMessage(_taunts[platform]);
+            }
+            else if (_defaultTaunt != null)
+            {
+                _levelContext.DisplayMessage(_defaultTaunt);
             }
         }
     }

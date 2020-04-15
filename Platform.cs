@@ -9,8 +9,16 @@ namespace Munchstein
     public enum PlatformType
     {
         CONCRETE,
+        CONCRETE_POINT,
         PASSTHROUGH,
         ONEWAY,
+    }
+
+    public enum InteractionType
+    {
+        STAND,
+        COLLIDE,
+        CHANGE_ORIENTATION,
     }
 
     public class Platform
@@ -22,12 +30,15 @@ namespace Munchstein
 
         public static Platform Concrete(Point2 topLeft, double width, double height = 0.3)
         {
-            return new Platform(new Box2(topLeft: topLeft, width: width, height: height));
+            return new Platform(new Box2(topLeft: topLeft, width: width, height: height)) { Type = PlatformType.CONCRETE };
         }
 
         public static Platform ConcretePoint(Point2 bottomLeft)
         {
-            return new Platform(new Box2(topLeft: bottomLeft + new Vector2(0, 0.1), width: 0.1, height: 0.1));
+            return new Platform(new Box2(topLeft: bottomLeft + new Vector2(0, 0.1), width: 0.1, height: 0.1))
+            {
+                Type = PlatformType.CONCRETE_POINT
+            };
         }
 
         public static Platform PassThrough(Point2 topLeft, double width)
@@ -42,12 +53,49 @@ namespace Munchstein
 
         public Box2 Box { get; private set; }
         public PlatformType Type { get; private set; }
+        public bool IsCollidable => Type == PlatformType.CONCRETE || Type == PlatformType.CONCRETE_POINT;
 
-        public event Action<Actor> OnActorStanding;
+        private event Action<Actor, InteractionType> OnInteract;
 
-        public void NotifyActorStanding(Actor actor)
+        public event Action<Actor> OnActorStanding
         {
-            OnActorStanding?.Invoke(actor);
+            add => OnInteract += (actor, type) =>
+            {
+                if (type == InteractionType.STAND)
+                {
+                    value(actor);
+                }
+            };
+            remove => throw new Exception("Not implemented");
+        }
+
+        public event Action<Actor> OnActorColliding
+        {
+            add => OnInteract += (actor, type) =>
+            {
+                if (type == InteractionType.COLLIDE)
+                {
+                    value(actor);
+                }
+            };
+            remove => throw new Exception("Not implemented");
+        }
+
+        public event Action<Actor> OnActorChangedOrientation
+        {
+            add => OnInteract += (actor, type) =>
+            {
+                if (type == InteractionType.CHANGE_ORIENTATION)
+                {
+                    value(actor);
+                }
+            };
+            remove => throw new Exception("Not implemented");
+        }
+
+        public void NotifyActorInteracting(Actor actor, InteractionType type)
+        {
+            OnInteract?.Invoke(actor, type);
         }
     }
 }

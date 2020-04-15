@@ -77,7 +77,7 @@ namespace Munchstein
                 if (newPlatform != null)
                 {
                     Velocity = Velocity.XProjection;
-                    newPlatform.NotifyActorStanding(this);
+                    newPlatform.NotifyActorInteracting(this, InteractionType.STAND);
                 }
             }
 
@@ -137,16 +137,21 @@ namespace Munchstein
                 return;
             }
 
-            Collision collision;
+            Platform collidingPlatform;
 
-            while (!(collision = _level.GetCollision(Box, dt * Velocity)).IsNone)
+            while ((collidingPlatform = _level.GetCollidingPlatform(Box)) != null)
             {
+                var collision = Box.CalcualteCollision(dt * Velocity, collidingPlatform.Box);
+
+                if (collision.IsNone)
+                {
+                    break;
+                }
+
                 _continuousWalkTime = 0;
+                bool changedOrientation = false;
 
-                Location -= collision.Vector;
-
-                if (CanChangeOrientation && collision.LineLength != double.NaN && 
-                    collision.LineLength <= Platform.MIN_WIDTH_TO_STAND_ON + 0.001)
+                if (CanChangeOrientation && collidingPlatform.Type == PlatformType.CONCRETE_POINT)
                 {
                     switch (Orientation)
                     {
@@ -154,28 +159,40 @@ namespace Munchstein
                             if (collision.Vector.X != 0 && Math.Abs(Velocity.X) >= MaxGroundSpeed)
                             {
                                 Orientation = ActorOrientation.FLAT;
+                                changedOrientation = true;
                             }
                             break;
                         case ActorOrientation.FLAT:
-                            if (collision.Vector.Y != 0 && Math.Abs(Velocity.Y) >= MaxGroundSpeed * 0.6)
+                            if (collision.Vector.Y != 0 && Velocity.Y <= -MaxGroundSpeed * 0.6)
                             {
                                 Orientation = ActorOrientation.TALL;
+                                changedOrientation = true;
                             }
                             break;
                     }
                 }
 
-
-                const double COLLISION_VELOCITY_LOSS_FACTOR = 0.75;
-
-                if (collision.Vector.X != 0)
+                if (changedOrientation)
                 {
-                    Velocity = Velocity.YProjection - Velocity.XProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
+                    collidingPlatform.NotifyActorInteracting(this, InteractionType.CHANGE_ORIENTATION);
                 }
-
-                if (collision.Vector.Y != 0)
+                else
                 {
-                    Velocity = Velocity.XProjection - Velocity.YProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
+                    collidingPlatform.NotifyActorInteracting(this, InteractionType.COLLIDE);
+
+                    Location -= collision.Vector;
+
+                    const double COLLISION_VELOCITY_LOSS_FACTOR = 0.75;
+
+                    if (collision.Vector.X != 0)
+                    {
+                        Velocity = Velocity.YProjection - Velocity.XProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
+                    }
+
+                    if (collision.Vector.Y != 0)
+                    {
+                        Velocity = Velocity.XProjection - Velocity.YProjection * (1 - COLLISION_VELOCITY_LOSS_FACTOR);
+                    }
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace Munchstein.Levels.Easy
 
         protected override void Build()
         {
-            DeathTaunts.Add(null, "You should have stayed at school");
+            DeathTaunts.Add(null, "I'm not even mad that you died, that's amazing!");
 
             Add(Platform.Concrete(new Point2(1, 9.5), width: 2));
 

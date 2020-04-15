@@ -90,6 +90,7 @@ namespace Munchstein
         private void InitLevel()
         {
             Level = LevelFactory.Create(this);
+            _paused = false;
         }
 
         public void RestartLevel()
@@ -308,7 +309,10 @@ namespace Munchstein
             switch (platform.Type)
             {
                 case PlatformType.CONCRETE:
-                    g.FillRectangle(Brushes.White, Transform(platform.Box));
+                    g.FillRectangle(Brushes.DimGray, Transform(platform.Box));
+                    break;
+                case PlatformType.CONCRETE_POINT:
+                    g.FillRectangle(Brushes.Purple, Transform(platform.Box));
                     break;
                 case PlatformType.PASSTHROUGH:
                     g.DrawLine(new Pen(Brushes.White, 3), Transform(platform.Box.TopLeft), Transform(platform.Box.TopRight));
@@ -336,14 +340,14 @@ namespace Munchstein
                 return false;
             }
 
-            if (DateTime.UtcNow > _msgExpiry)
+            if (DateTime.UtcNow > _msgExpiry && !_paused)
             {
                 _msgToDisplay = null;
                 return false;
             }
 
-            var font = new Font("Courier new", 42);
-            g.DrawString(_msgToDisplay, font, Brushes.Orange, new RectangleF(40, 60, Width, DRAW_SCALE * 4));
+            var font = new Font("Courier new", 40);
+            g.DrawString(_msgToDisplay, font, Brushes.DarkOrange, new RectangleF(40, 60, Width, DRAW_SCALE * 4));
 
             return true;
         }
@@ -385,6 +389,17 @@ namespace Munchstein
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.P)
+            {
+                PauseUnpause();
+                return;
+            }
+
+            if (_paused)
+            {
+                return;
+            }
+
             var actor = Level.Actor;
 
             switch (e.KeyCode)
@@ -400,9 +415,6 @@ namespace Munchstein
                     break;
                 case Keys.R:
                     RestartLevel();
-                    break;
-                case Keys.P:
-                    PauseUnpause();
                     break;
                 case Keys.J:
                     if (e.Control && e.Shift)

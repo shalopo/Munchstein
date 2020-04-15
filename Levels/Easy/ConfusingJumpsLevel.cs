@@ -47,8 +47,9 @@ namespace Munchstein.Levels.Easy
 
             Add(Platform.Concrete(topLeftCube + new Vector2(2.1, -10), width: 1, height: 1));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Don't blink now!");
+            DeathTaunts.Add(Platforms.Last(), "Well aren't you a party pooper...");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(6.2, -10), width: 2.3));
+            Add(Platform.Concrete(topLeftCube + new Vector2(6.1, -10), width: 2.3));
 
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }

@@ -25,22 +25,20 @@ namespace Munchstein
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
 
-        Collision ILevel.GetCollision(Box2 box, Vector2 disposition)
+        Platform ILevel.GetCollidingPlatform(Box2 box)
         {
             foreach (Platform platform in _platforms)
             {
-                if (platform.Type == PlatformType.CONCRETE)
+                if (platform.IsCollidable)
                 {
-                    var collisionVector = box.CalcualteCollision(disposition, platform.Box);
-
-                    if (!collisionVector.IsNone)
+                    if (Box2.Overlap(box, platform.Box))
                     {
-                        return collisionVector;
+                        return platform;
                     }
                 }
             }
 
-            return Collision.NONE;
+            return null;
         }
 
         Platform ILevel.GetSupportingPlatform(Box2 box)

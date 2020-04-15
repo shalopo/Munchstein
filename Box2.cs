@@ -42,28 +42,21 @@ namespace Munchstein
 
         public Collision CalcualteCollision(Vector2 disposition, Box2 other)
         {
-            if (Overlap(this, other))
+            if (disposition.X >= 0 && disposition.Y >= 0)
             {
-                if (disposition.X >= 0 && disposition.Y >= 0)
-                {
-                    return CalcualteCollisionInternal(disposition, other);
-                }
-                else if (disposition.Y < 0 && disposition.X >= 0)
-                {
-                    return YMirror.CalcualteCollision(disposition.YMirror, other.YMirror).YMirror;
-                }
-                else if (disposition.X < 0 && disposition.Y >= 0)
-                {
-                    return XMirror.CalcualteCollision(disposition.XMirror, other.XMirror).XMirror;
-                }
-                else
-                {
-                    return Mirror.CalcualteCollision(-disposition, other.Mirror).Mirror;
-                }
+                return CalcualteCollisionInternal(disposition, other);
+            }
+            else if (disposition.Y < 0 && disposition.X >= 0)
+            {
+                return YMirror.CalcualteCollision(disposition.YMirror, other.YMirror).YMirror;
+            }
+            else if (disposition.X < 0 && disposition.Y >= 0)
+            {
+                return XMirror.CalcualteCollision(disposition.XMirror, other.XMirror).XMirror;
             }
             else
             {
-                return Collision.NONE;
+                return Mirror.CalcualteCollision(-disposition, other.Mirror).Mirror;
             }
         }
 
