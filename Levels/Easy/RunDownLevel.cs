@@ -29,9 +29,11 @@ namespace Munchstein.Levels.Easy
             runDownPlatform.OnActorStanding += actor => LevelContext.DisplayHint(RUN_DOWN_HINT);
 
             Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(0.3, 3.7), width: 1, height: 3));
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Was it especially important to reach here?");
+
             Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(0.5, -2), width:0.6));
 
-            Add(Platform.Concrete(new Point2(11.5, 5), width: 4));
+            Add(Platform.Concrete(new Point2(12, 5), width: 3.5));
             Platforms.Last().OnActorStanding += actor =>
             {
                 LevelContext.SuppressHint(RUN_DOWN_HINT);

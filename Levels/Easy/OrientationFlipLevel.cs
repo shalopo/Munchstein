@@ -12,7 +12,7 @@ namespace Munchstein.Levels.Easy
 
         protected override void Build()
         {
-            Add(Platform.OneWay(new Point2(2, 8), width: 9.8));
+            Add(Platform.OneWay(new Point2(2, 8), width: 9));
             Platforms.Last().OnActorStanding += actor =>
             {
                 if (actor.Size == 1)
@@ -92,7 +92,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.OneWay(new Point2(8, 9), width: 1));
+            Add(Platform.OneWay(new Point2(8, 9), width: 1.5));
             Add(Platform.OneWay(new Point2(7, 10), width: 3));
             Add(Platform.Concrete(new Point2(19, 2), width: 3));
             Platforms.Last().OnActorStanding += actor =>
@@ -103,7 +103,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(19, 2.9)));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(18.5, 2.9)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -116,11 +116,11 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(22, 4), width: 1));
-            Add(Platform.PassThrough(new Point2(23, 6), width: 1));
+            Add(Platform.PassThrough(new Point2(21, 4), width: 1));
+            Add(Platform.PassThrough(new Point2(21, 6), width: 1));
             Add(Platform.OneWay(new Point2(18, 8), width: 12));
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.9)));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 9.9)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -133,7 +133,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(8, 4), width: 3));
+            Add(Platform.PassThrough(new Point2(8, 4), width: 2));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage(
                 "If you liked this game so far, well... be prepared to hate your own life as well", seconds: 7);
 
@@ -161,7 +161,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.Concrete(new Point2(13, 10), width: 0.2, height: 0.5));
+            Add(Platform.Concrete(new Point2(12.8, 10), width: 0.2, height: 0.5));
 
             Platforms.Last().OnActorStanding += actor =>
             {
@@ -169,7 +169,7 @@ namespace Munchstein.Levels.Easy
                 {
                     LevelContext.DisplayMessage("You have just unlocked a new ability: Uselesness", seconds: 7);
                 }
-                else
+                else if (actor.Orientation == ActorOrientation.FLAT)
                 {
                     LevelContext.DisplayMessage("Well well well. Look who's back in town");
                 }
@@ -197,9 +197,9 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(22, 10), width: 4));
+            Add(Platform.PassThrough(new Point2(22, 9), width: 4));
 
-            Add(Platform.OneWay(new Point2(21, 12), width: 7));
+            Add(Platform.OneWay(new Point2(21, 11), width: 5));
             Platforms.Last().OnActorStanding += actor =>
             {
                 if (actor.Size == 1)
@@ -208,8 +208,8 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.OneWay(new Point2(5, 10), width: 5.3));
-            Add(Platform.OneWay(new Point2(7.25, 11), width: 0.5));
+            Add(Platform.OneWay(new Point2(5, 10), width: 5));
+            Add(Platform.OneWay(new Point2(7.25, 10.75), width: 0.5));
             Add(Platform.OneWay(new Point2(6.5, 12), width: 2.1));
             Add(Platform.PassThrough(new Point2(3, 12.9), width: 6));
 

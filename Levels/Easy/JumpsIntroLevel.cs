@@ -9,19 +9,26 @@ namespace Munchstein.Levels.Easy
     class JumpsIntroLevel : LevelBuilder
     {
         static readonly Hint JUMP_HINT = new Hint("Hit SPACE to jump");
+        static readonly Hint HOLD_JUMP_HINT = new Hint("Press and hold SPACE while moving to auto jump at the last moment");
         static readonly Hint MOMENTUM_HINT = new Hint("Keep up the good momentum, metaphorically speaking");
 
         protected override void Build()
         {
             DeathTaunts.Add(null, "What a shame, I had such high hopes for you");
 
-            for (int i = 0; i < 5; i++)
+            const double STEP_WIDTH = 1.2;
+
+            Add(Platform.Concrete(new Point2(2.5, 4), width: STEP_WIDTH));
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayHint(JUMP_HINT);
+
+            for (int i = 1; i < 5; i++)
             {
-                Add(Platform.Concrete(new Point2(3 + i * i / 2.8 + 2 * i, 4 + i), width: 1.5));
+                Add(Platform.Concrete(new Point2(3 + i * i / 2.8 + 2 * i, 4 + i), width: STEP_WIDTH));
             }
 
-            Platforms[0].OnActorStanding += actor => LevelContext.DisplayHint(JUMP_HINT);
-            Platforms[Platforms.Count - 2].OnActorStanding += actor =>
+            Platforms[2].OnActorStanding += actor => LevelContext.DisplayHint(HOLD_JUMP_HINT);
+
+            Platforms[3].OnActorStanding += actor =>
             {
                 if (actor.Velocity.IsZero)
                 {

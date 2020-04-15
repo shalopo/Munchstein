@@ -8,8 +8,6 @@ namespace Munchstein.Levels.Easy
 {
     public class FirstMunchLevel : LevelBuilder
     {
-        Platform upperGate;
-
         protected override void Build()
         {
             Add(Platform.Concrete(new Point2(7, 3), width: 1, height: 0.3));
@@ -37,7 +35,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.PassThrough(new Point2(9, 4), width: 1.5));
             Add(Platform.PassThrough(new Point2(10.5, 8), width: 2.6));
             Add(Platform.PassThrough(new Point2(20, 7), width: 1));
-            Add(Platform.PassThrough(new Point2(12.9, 4), width: 1.8));
+            Add(Platform.PassThrough(new Point2(12.9, 4), width: 1.5));
             Add(Platform.OneWay(new Point2(13.2, 5), width: 1.5));
             DeathTaunts.Add(Platforms.Last(), "You should use your head for thinking");
 
@@ -50,11 +48,10 @@ namespace Munchstein.Levels.Easy
 
             Add(Platform.Concrete(new Point2(14, 7), width: 0.3, height: 0.3));
             Add(Platform.Concrete(new Point2(13.7, 9.3), width: 0.3, height: 0.3));
-            Add(Platform.Concrete(new Point2(17.8, 3), width: 1.7, height: 0.3));
-            Add(Platform.Concrete(new Point2(20, 4), width: 0.3));
+            Add(Platform.Concrete(new Point2(17.8, 3), width: 1, height: 0.3));
+            Add(Platform.Concrete(new Point2(20.2, 3.8), width: 0.3));
 
             Add(Platform.Concrete(new Point2(21, 8), width: 0.3, height: 0.5));
-            upperGate = Platforms.Last();
             Platforms.Last().OnActorStanding += actor =>
             {
                 if (actor.Size == 2)
@@ -84,7 +81,7 @@ namespace Munchstein.Levels.Easy
                 }
                 else
                 {
-                    LevelContext.DisplayMessage("How did you get here?");
+                    LevelContext.DisplayMessage("You're too small for this world");
                 }
             };
             level.Actor.OnMunch += (munch) =>

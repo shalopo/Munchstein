@@ -46,13 +46,14 @@ namespace Munchstein
 
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-            LevelsSequence = new LevelsSequence { new LevelFactory<Levels.Easy.OrientationFlipLevel>() };
+            //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.Easy.OrientationFlipLevel>() };
             //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.DebugLevel>() };
 
             LevelIndex = 0;
             StartLevel();
 
             KeyDown += OnKeyDown;
+            KeyUp += OnKeyUp;
         }
 
         public void DisplayMessage(string msg, int? seconds = null)
@@ -346,8 +347,7 @@ namespace Munchstein
                 return false;
             }
 
-            var font = new Font("Courier new", 40);
-            g.DrawString(_msgToDisplay, font, Brushes.DarkOrange, new RectangleF(40, 60, Width, DRAW_SCALE * 4));
+            DrawMessageInner(g, _msgToDisplay);
 
             return true;
         }
@@ -365,8 +365,13 @@ namespace Munchstein
                 return;
             }
 
-            var font = new Font("Courier new", 42);
-            g.DrawString(_hintToDisplay.Message, font, Brushes.Orange, new PointF(40, 60));
+            DrawMessageInner(g, _hintToDisplay.Message);
+        }
+
+        private void DrawMessageInner(Graphics g, string msg)
+        {
+            var font = new Font("Courier new", 40);
+            g.DrawString(msg, font, Brushes.DarkOrange, new RectangleF(40, 60, Width, DRAW_SCALE * 4));
         }
 
         private void HandleContinuousKeys()
@@ -384,6 +389,11 @@ namespace Munchstein
             else
             {
                 actor.Stop();
+            }
+
+            if (Keyboard.IsKeyDown(Key.Space))
+            {
+                actor.PrepareForJump();
             }
         }
 
@@ -409,9 +419,6 @@ namespace Munchstein
                     break;
                 case Keys.Up:
                     actor.Action();
-                    break;
-                case Keys.Space:
-                    actor.Jump();
                     break;
                 case Keys.R:
                     RestartLevel();
@@ -441,7 +448,21 @@ namespace Munchstein
                         Level.Actor.Location += new Vector2(-0.05, 0);
                     }
                     break;
-                default:
+            }
+        }
+
+        private void OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (_paused)
+            {
+                return;
+            }
+
+            var actor = Level.Actor;
+            switch (e.KeyCode)
+            {
+                case Keys.Space:
+                    actor.ReleaseJumpIfPreparing();
                     break;
             }
         }
