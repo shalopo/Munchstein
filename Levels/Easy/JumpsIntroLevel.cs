@@ -26,15 +26,15 @@ namespace Munchstein.Levels.Easy
                 Add(Platform.Concrete(new Point2(3 + i * i / 2.8 + 2 * i, 4 + i), width: STEP_WIDTH));
             }
 
-            Platforms[2].OnActorStanding += actor => LevelContext.DisplayHint(HOLD_JUMP_HINT);
-
-            Platforms[3].OnActorStanding += actor =>
+            Platforms[2].OnActorStanding += actor =>
             {
                 if (actor.Velocity.IsZero)
                 {
                     LevelContext.DisplayHint(MOMENTUM_HINT);
                 }
             };
+
+            Platforms[3].OnActorStanding += actor => LevelContext.DisplayHint(HOLD_JUMP_HINT);
 
             DeathTaunts.Add(Platforms[Platforms.Count - 2], "You snooze, you lose");
 

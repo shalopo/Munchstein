@@ -281,6 +281,7 @@ namespace Munchstein
         {
             if (!CanJump)
             {
+                OnJump?.Invoke();
                 return;
             }
 

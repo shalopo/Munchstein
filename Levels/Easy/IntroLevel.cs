@@ -13,8 +13,6 @@ namespace Munchstein.Levels.Easy
 
         protected override void Build()
         {
-            DeathTaunts.Add(null, "I'm not even mad that you died, that's amazing!");
-
             Add(Platform.Concrete(new Point2(1, 9.5), width: 2));
 
             for (int i = 0; i < 5; i++)
@@ -30,12 +28,16 @@ namespace Munchstein.Levels.Easy
                 LevelContext.DisplayMessage("Good. Was just making sure you have pulse", seconds: 2);
             };
 
+            DeathTaunts.Add(Platforms[4], "Stop being so insecure!");
+            DeathTaunts.Add(Platforms[5], "You're a goner");
+
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayHint(DOOR_HINT);
         }
 
         protected override void PostBuild(Level level)
         {
             level.Actor.CanJump = false;
+            level.Actor.OnJump += () => LevelContext.DisplayMessage("When exactly did we say you can jump?");
         }
     }
 }
