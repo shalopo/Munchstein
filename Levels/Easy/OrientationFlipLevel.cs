@@ -44,7 +44,7 @@ namespace Munchstein.Levels.Easy
                 {
                     if (verticalVelocityUnnecessaryFails == 0)
                     {
-                        LevelContext.DisplayMessage("You're missing the POINT! It's a pun, get it?", seconds: 7);
+                        LevelContext.DisplayMessage("You're heading in the wrong direction! I mean, generally in life, it's not a clue or anything", seconds: 7);
                     }
                     else
                     {
@@ -94,7 +94,7 @@ namespace Munchstein.Levels.Easy
 
             Add(Platform.OneWay(new Point2(8, 9), width: 1.5));
             Add(Platform.OneWay(new Point2(7, 10), width: 3));
-            Add(Platform.Concrete(new Point2(19, 2), width: 3));
+            Add(Platform.Concrete(new Point2(19, 2), width: 2));
             Platforms.Last().OnActorStanding += actor =>
             {
                 if (actor.Orientation == ActorOrientation.FLAT)
@@ -116,11 +116,11 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(21, 4), width: 1));
-            Add(Platform.PassThrough(new Point2(21, 6), width: 1));
+            Add(Platform.PassThrough(new Point2(20, 4), width: 1));
+            Add(Platform.PassThrough(new Point2(20, 6), width: 1));
             Add(Platform.OneWay(new Point2(18, 8), width: 12));
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 9.9)));
+            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.4)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -197,7 +197,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.PassThrough(new Point2(22, 9), width: 4));
+            Add(Platform.PassThrough(new Point2(21.5, 9.5), width: 4.5));
 
             Add(Platform.OneWay(new Point2(21, 11), width: 5));
             Platforms.Last().OnActorStanding += actor =>
