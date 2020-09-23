@@ -46,8 +46,8 @@ namespace Munchstein.Levels.Easy
             DeathTaunts.Add(Platforms.Last(), "Are your hands sweaty?");
 
             Add(Platform.Concrete(topLeftCube + new Vector2(1.5, -10), width: 1, height: 1));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Don't blink now!");
-            DeathTaunts.Add(Platforms.Last(), "Well aren't you a party pooper...");
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Captain obvious to the rescue!");
+            DeathTaunts.Add(Platforms.Last(), "I'll have you know that you shouldn't have done that");
 
             Add(Platform.Concrete(topLeftCube + new Vector2(6, -10), width: 2.3));
 
