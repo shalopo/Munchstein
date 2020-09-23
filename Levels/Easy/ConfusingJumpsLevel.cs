@@ -45,11 +45,11 @@ namespace Munchstein.Levels.Easy
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Finally! You did another pointless move");
             DeathTaunts.Add(Platforms.Last(), "Are your hands sweaty?");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(2.1, -10), width: 1, height: 1));
+            Add(Platform.Concrete(topLeftCube + new Vector2(1.5, -10), width: 1, height: 1));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Don't blink now!");
             DeathTaunts.Add(Platforms.Last(), "Well aren't you a party pooper...");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(6.1, -10), width: 2.3));
+            Add(Platform.Concrete(topLeftCube + new Vector2(6, -10), width: 2.3));
 
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }
