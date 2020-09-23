@@ -10,9 +10,12 @@ namespace Munchstein.Levels.Easy
     {
         static readonly Hint POINT_HINT = new Hint("Try hitting the purple point");
 
+        Platform _checkpoint1;
+        Platform _checkpoint2;
+
         protected override void Build()
         {
-            Add(Platform.OneWay(new Point2(2, 8), width: 9));
+            _checkpoint2 = Add(Platform.OneWay(new Point2(2, 8), width: 9));
             Platforms.Last().OnActorStanding += actor =>
             {
                 if (actor.Size == 1)
@@ -120,7 +123,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.PassThrough(new Point2(20, 6), width: 1));
             Add(Platform.OneWay(new Point2(18, 8), width: 12));
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.4)));
+            _checkpoint1 = Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.4)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -150,15 +153,6 @@ namespace Munchstein.Levels.Easy
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 LevelContext.DisplayMessage("You've figured something out on your own! That's new!");
-            };
-
-            Platforms.Last().OnActorColliding += actor =>
-            {
-                if (actor.Orientation == ActorOrientation.FLAT)
-                {
-                    LevelContext.DisplayMessage("You may press R once you are DOWN for it.\n" +
-                        "R is for \"regret everything\"", seconds: 10);
-                }
             };
 
             Add(Platform.Concrete(new Point2(12.8, 10), width: 0.2, height: 0.5));
@@ -270,6 +264,16 @@ namespace Munchstein.Levels.Easy
             level.Door.Location -= Vector2.X_UNIT / 4;
 
             level.Munch = new Munch(new Point2(9, 2.5));
+
+            _checkpoint1.OnActorChangedOrientation += actor => level.SaveCheckpoint();
+
+            _checkpoint2.OnActorLanding += actor =>
+            {
+                if (actor.Size == 2 && actor.Orientation == ActorOrientation.TALL)
+                {
+                    level.SaveCheckpoint();
+                }
+            };
 
             level.Actor.OnMunch += munch =>
             {

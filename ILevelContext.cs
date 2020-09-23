@@ -9,7 +9,6 @@ namespace Munchstein
     public interface ILevelContext
     {
         void NotifyLevelComplete();
-        void RestartLevel();
         void DisplayMessage(string msg, int? seconds = null);
         void DisplayHint(Hint hint);
         void SuppressHint(Hint hint);

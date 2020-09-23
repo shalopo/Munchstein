@@ -83,7 +83,15 @@ namespace Munchstein
                 else
                 {
                     Velocity = Velocity.XProjection;
-                    newPlatform.NotifyActorInteracting(this, InteractionType.STAND);
+
+                    if (newPlatform != CurrentPlatform)
+                    {
+                        newPlatform.NotifyActorInteracting(this, InteractionType.LAND);
+                    }
+                    else
+                    {
+                        newPlatform.NotifyActorInteracting(this, InteractionType.STAND);
+                    }
 
                     if (Velocity.X == 0)
                     {
@@ -141,8 +149,8 @@ namespace Munchstein
 
             if (Location.Y <= 0)
             {
-                OnDeath?.Invoke();
                 _level.NotifyActorDead();
+                OnDeath?.Invoke();
             }
         }
 
@@ -175,6 +183,7 @@ namespace Munchstein
                             if (collision.Vector.X != 0 && Math.Abs(Velocity.X) >= MaxGroundSpeed)
                             {
                                 Orientation = ActorOrientation.FLAT;
+                                Location -= Vector2.X_UNIT * ((Width - Height) / 2 * Math.Sign(Velocity.X) + collidingPlatform.Box.Width);
                                 changedOrientation = true;
                             }
                             break;

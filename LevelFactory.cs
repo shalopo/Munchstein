@@ -34,6 +34,8 @@ namespace Munchstein
 
             level.Actor.OnDeath += () => DeathTaunts.NotifyDeath(level.Actor.LastPlatform);
 
+            level.Init();
+
             return level;
         }
 

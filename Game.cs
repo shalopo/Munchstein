@@ -94,7 +94,7 @@ namespace Munchstein
             _paused = false;
         }
 
-        public void RestartLevel()
+        private void RestartLevel()
         {
             InitLevel();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Munchstein
 {
@@ -16,14 +17,34 @@ namespace Munchstein
             Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2);
         }
 
-        public Actor Actor { get; private set; }
-
         readonly ILevelContext _levelControl;
         readonly List<Platform> _platforms = new List<Platform>();
         public Door Door { get; private set; }
+
+        public Actor Actor { get; private set; }
         public Munch Munch { get; set; }
+        private LevelState _checkpoint;
+
+        struct LevelState
+        {
+            public struct ActorState
+            {
+                public Point2 Location { get; set; }
+                public int Size { get; set; }
+                public ActorOrientation Orientation { get; set; }
+                public Vector2 Velocity { get; set; }
+            }
+
+            public ActorState Actor { get; set; }
+            public Munch Munch { get; set; }
+        }
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
+
+        public void Init()
+        {
+            SaveCheckpoint();
+        }
 
         Platform ILevel.GetCollidingPlatform(Box2 box)
         {
@@ -78,7 +99,7 @@ namespace Munchstein
 
         void ILevel.NotifyActorDead()
         {
-            _levelControl.RestartLevel();
+            LoadLastCheckpoint();
         }
 
         Munch ILevel.TryEatMunch(Box2 box)
@@ -97,5 +118,32 @@ namespace Munchstein
         {
             Actor.Step(dt);
         }
+
+        public void SaveCheckpoint()
+        {
+            _checkpoint = new LevelState
+            {
+                Actor = new LevelState.ActorState
+                {
+                    Location = Actor.Location,
+                    Orientation = Actor.Orientation,
+                    Size = Actor.Size,
+                    Velocity = Actor.Velocity,
+                },
+                Munch = Munch,
+            };
+        }
+
+        private void LoadLastCheckpoint()
+        {
+            var actorState = _checkpoint.Actor;
+            Actor.Location = actorState.Location;
+            Actor.Orientation = actorState.Orientation;
+            Actor.Size = actorState.Size;
+            Actor.Velocity = actorState.Velocity;
+            
+            Munch = _checkpoint.Munch;
+        }
+
     }
 }

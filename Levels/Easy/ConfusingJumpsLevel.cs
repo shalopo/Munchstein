@@ -8,6 +8,8 @@ namespace Munchstein.Levels.Easy
 {
     public class ConfusingJumpsLevel : LevelBuilder
     {
+        Platform _checkpoint;
+
         protected override void Build()
         {
             Add(Platform.Concrete(new Point2(3, 3), width: 5));
@@ -32,7 +34,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(new Point2(10.5, 13), width: 1, height: 1));
             DeathTaunts.Add(Platforms.Last(), "Real smooth...");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(3.9, -4.3), width: 1, height: 1));
+            _checkpoint = Add(Platform.Concrete(topLeftCube + new Vector2(3.9, -4.3), width: 1, height: 1));
 
             Add(Platform.Concrete(topLeftCube + new Vector2(6.1, -6), width: 2, height: 2));
             DeathTaunts.Add(Platforms.Last(), "Closette but not quite the cigarette");
@@ -52,6 +54,11 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(topLeftCube + new Vector2(6, -10), width: 2.3));
 
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
+        }
+
+        protected override void PostBuild(Level level)
+        {
+            _checkpoint.OnActorLanding += actor => level.SaveCheckpoint();
         }
     }
 }

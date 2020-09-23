@@ -15,6 +15,7 @@ namespace Munchstein.Levels.Easy
         public bool DroppedFromFirstPlatform { get; set; }
 
         Platform _highOneWayPlatform;
+        Platform _checkpoint;
         bool _steppedOnHighOneWay = false;
 
 
@@ -33,7 +34,7 @@ namespace Munchstein.Levels.Easy
 
             Add(Platform.Concrete(runDownPlatform.Box.TopRight + new Vector2(0.5, -2), width:0.6));
 
-            Add(Platform.Concrete(new Point2(12, 5), width: 3.5));
+            _checkpoint = Add(Platform.Concrete(new Point2(12, 5), width: 3.5));
             Platforms.Last().OnActorStanding += actor =>
             {
                 LevelContext.SuppressHint(RUN_DOWN_HINT);
@@ -86,6 +87,8 @@ namespace Munchstein.Levels.Easy
                     LevelContext.DisplayMessage("Now I'm disappointed");
                 }
             };
+
+            _checkpoint.OnActorLanding += actor => level.SaveCheckpoint();
         }
     }
 }

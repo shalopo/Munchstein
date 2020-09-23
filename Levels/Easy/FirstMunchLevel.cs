@@ -8,12 +8,15 @@ namespace Munchstein.Levels.Easy
 {
     public class FirstMunchLevel : LevelBuilder
     {
+        Platform _checkpoint;
+
         protected override void Build()
         {
             Add(Platform.Concrete(new Point2(7, 3), width: 1, height: 0.3));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Find your inner peace");
+            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("Find your inner peace");
 
-            Add(Platform.OneWay(new Point2(7, 7), width: 4.5));
+            _checkpoint = Add(Platform.OneWay(new Point2(7, 7), width: 4.5));
+
             Add(Platform.PassThrough(new Point2(16.9, 8), width: 0.3));
 
             Add(Platform.OneWay(new Point2(18.3, 5), width: 1.5));
@@ -22,7 +25,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.OneWay(new Point2(10, 9), width: 3.7));
 
             Add(Platform.OneWay(new Point2(15.6, 9), width: 5.4));
-            Platforms.Last().OnActorStanding += actor =>
+            Platforms.Last().OnActorLanding += actor =>
             {
                 if (actor.Size == 1)
                 {
@@ -52,7 +55,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(new Point2(20.2, 3.8), width: 0.3));
 
             Add(Platform.Concrete(new Point2(21, 8), width: 0.3, height: 0.5));
-            Platforms.Last().OnActorStanding += actor =>
+            Platforms.Last().OnActorLanding += actor =>
             {
                 if (actor.Size == 2)
                 {
@@ -73,7 +76,15 @@ namespace Munchstein.Levels.Easy
             level.Munch = new Munch(new Point2(21.15, 9.9));
             level.Door.Size = 2;
 
-            Platforms.Last().OnActorStanding += actor =>
+            _checkpoint.OnActorLanding += actor =>
+            {
+                if (actor.Size == 2)
+                {
+                    level.SaveCheckpoint();
+                }
+            };
+
+            Platforms.Last().OnActorLanding += actor =>
             {
                 if (actor.Size == level.Door.Size)
                 {
@@ -84,18 +95,12 @@ namespace Munchstein.Levels.Easy
                     LevelContext.DisplayMessage("You're too small for this world");
                 }
             };
+
             level.Actor.OnMunch += (munch) =>
             {
-                if (level.Actor.Velocity.Y < 0)
-                {
-                    LevelContext.DisplayMessage("Stop trying to break the puzzle");
-                }
-                else
-                {
-                    LevelContext.DisplayMessage("Yum! Big boys can jump higher!");
-                }
+                level.Actor.Location += new Vector2(-level.Actor.Width / 2, level.Actor.Height / 2);
 
-                level.Actor.Location = munch.Location - new Vector2(0.5, 0);
+                LevelContext.DisplayMessage("Yum! Big boys can jump higher!");
                 level.Actor.Velocity = Vector2.ZERO;
             };
 

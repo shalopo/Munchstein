@@ -16,6 +16,7 @@ namespace Munchstein
 
     public enum InteractionType
     {
+        LAND,
         STAND,
         COLLIDE,
         CHANGE_ORIENTATION,
@@ -56,6 +57,18 @@ namespace Munchstein
         public bool IsCollidable => Type == PlatformType.CONCRETE || Type == PlatformType.CONCRETE_POINT;
 
         private event Action<Actor, InteractionType> OnInteract;
+
+        public event Action<Actor> OnActorLanding
+        {
+            add => OnInteract += (actor, type) =>
+            {
+                if (type == InteractionType.LAND)
+                {
+                    value(actor);
+                }
+            };
+            remove => throw new Exception("Not implemented");
+        }
 
         public event Action<Actor> OnActorStanding
         {
