@@ -39,6 +39,7 @@ namespace Munchstein
         int _fps = 0;
 
         bool _debug = Debugger.IsAttached;
+        Point2 _lastDebugClickPoint = new Point2(0, 0);
 
         public Game()
         {
@@ -54,6 +55,8 @@ namespace Munchstein
 
             KeyDown += OnKeyDown;
             KeyUp += OnKeyUp;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
         }
 
         public void DisplayMessage(string msg, int? seconds = null)
@@ -295,6 +298,11 @@ namespace Munchstein
             return new Point(TransformX(p.X), TransformY(p.Y));
         }
 
+        private Point2 TransformReverse(Point p)
+        {
+            return new Point2(p.X / (double)DRAW_SCALE, (Height - p.Y) / (double)DRAW_SCALE);
+        }
+
         private Size Transform(Vector2 v)
         {
             return new Size((int)Math.Round(v.X * DRAW_SCALE), (int)Math.Round(v.Y * DRAW_SCALE));
@@ -471,5 +479,41 @@ namespace Munchstein
         {
             _paused = !_paused;
         }
+
+        private void OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (!_debug)
+            {
+                return;
+            }
+
+            _lastDebugClickPoint = TransformReverse(e.Location);
+        }
+
+        private void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (!_debug)
+            {
+                return;
+            }
+
+            var currentDebugClickPoint = TransformReverse(e.Location);
+            var diff = currentDebugClickPoint - _lastDebugClickPoint;
+
+            var text = $"new Point2({_lastDebugClickPoint.X:0.0}, {_lastDebugClickPoint.Y:0.0})";
+
+            if (diff.X >= 0.1)
+            {
+                text += $", width: {diff.X:0.0}";
+            }
+
+            if (diff.Y >= 0.1)
+            {
+                text += $", height: {diff.Y:0.0}";
+            }
+
+            Clipboard.SetText(text);
+        }
+
     }
 }
