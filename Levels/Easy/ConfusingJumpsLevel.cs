@@ -8,57 +8,74 @@ namespace Munchstein.Levels.Easy
 {
     public class ConfusingJumpsLevel : LevelBuilder
     {
-        Platform _checkpoint;
+        Platform _boop;
 
         protected override void Build()
         {
-            Add(Platform.Concrete(new Point2(3, 3), width: 5));
+            Add(Platform.PassThrough(new Point2(8, 13), width: 3));
 
-            Platforms[0].OnActorStanding += actor => LevelContext.DisplayMessage("That doesn't look too bad...");
-            DeathTaunts.Add(Platforms[0], "Seriously?");
+            Platforms[0].OnActorLanding += actor => LevelContext.DisplayMessage("That doesn't look too bad...");
 
-            var num_steps = 5;
+            Add(Platform.Concrete(new Point2(14.8, 8.8), width: 1, height: 1));
+            DeathTaunts.Add(Platforms.Last(), "Well yes, but actually no");
 
-            for (int i = 0; i < num_steps; i++)
-            {
-                Add(Platform.PassThrough(new Point2(3, 3 + (i + 1) * 2), width: 5));
-            }
+            Add(Platform.Concrete(new Point2(18, 7.4), width: 2, height: 2.2));
+            DeathTaunts.Add(Platforms.Last(), "Absolutely but not really");
 
-            DeathTaunts.Add(Platforms[1], "You're not grasping the gravity of the situation");
-            DeathTaunts.Add(Platforms[2], "You're obviously running out of ideas");
-            DeathTaunts.Add(Platforms[3], "It sure looked promising, didn't it?");
-            DeathTaunts.Add(Platforms[4], "That was an awkward attempt");
-            DeathTaunts.Add(Platforms[5], "You were trained to do this right");
+            Add(Platform.Concrete(new Point2(18.6, 7.55), width: 0.5, height: 0.15));
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("If it fits, I sits");
 
-            var topLeftCube = new Point2(11.2, 13);
-            Add(Platform.Concrete(new Point2(10.5, 13), width: 1, height: 1));
-            DeathTaunts.Add(Platforms.Last(), "Real smooth...");
+            Add(Platform.Concrete(new Point2(17.85, 6.2), width: 0.15, height: 0.5));
+            Add(Platform.Concrete(new Point2(19, 5.2), width: 0.5, height: 0.15));
+            Add(Platform.Concrete(new Point2(20.0, 6.9), width: 0.15, height: 0.5));
 
-            _checkpoint = Add(Platform.Concrete(topLeftCube + new Vector2(3.9, -4.3), width: 1, height: 1));
+            _boop = Add(Platform.Concrete(new Point2(18.7, 10.4), width: 1, height: 1));
+            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("This is exciting!");
+            DeathTaunts.Add(Platforms.Last(), "Did you really think it would be that easy?");
+            
+            Add(Platform.Concrete(new Point2(13, 3), width: 1, height: 1));
+            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("Captain obvious to the rescue!");
+            DeathTaunts.Add(Platforms.Last(), "LOL you knew this would fail");
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(6.1, -6), width: 2, height: 2));
-            DeathTaunts.Add(Platforms.Last(), "Closette but not quite the cigarette");
+            Add(Platform.Concrete(new Point2(18.1, 3), width: 3.2));
 
-            Add(Platform.Concrete(topLeftCube + new Vector2(2, -7), width: 1, height: 1));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("This is getting exciting! Or is it...");
-            DeathTaunts.Add(Platforms.Last(), "LOL. You knew this would fail");
-
-            Add(Platform.Concrete(topLeftCube + new Vector2(7, -2.5), width: 1, height: 1));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Finally! You did another pointless move");
-            DeathTaunts.Add(Platforms.Last(), "Are your hands sweaty?");
-
-            Add(Platform.Concrete(topLeftCube + new Vector2(1.5, -10), width: 1, height: 1));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Captain obvious to the rescue!");
-            DeathTaunts.Add(Platforms.Last(), "I'll have you know that you shouldn't have done that");
-
-            Add(Platform.Concrete(topLeftCube + new Vector2(6, -10), width: 2.3));
-
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
+            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }
 
         protected override void PostBuild(Level level)
         {
-            _checkpoint.OnActorLanding += actor => level.SaveCheckpoint();
+            int numBoops = 0;
+
+            _boop.OnActorColliding += actor =>
+            {
+                if (actor.Velocity.Y > 0)
+                {
+                    switch (numBoops)
+                    {
+                        case 0:
+                            LevelContext.DisplayMessage("BOOP");
+                            break;
+                        case 1:
+                            LevelContext.DisplayMessage("BOOP BOOP");
+                            break;
+                        case 2:
+                            LevelContext.DisplayMessage("Are you looking for mushrooms?");
+                            break;
+                        default:
+                            if (actor.Velocity.X > 0)
+                            {
+                                LevelContext.DisplayMessage("Maybe you're on to something");
+                            }
+                            else
+                            {
+                                LevelContext.DisplayMessage("Do you need DIRECTIONs?");
+                            }
+                            break;
+                    }
+
+                    numBoops++;
+                }
+            };
         }
     }
 }
