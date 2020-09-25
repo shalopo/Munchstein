@@ -281,7 +281,7 @@ namespace Munchstein
             }
 
             var door = _level.GetAdjacentDoor(Box);
-            if (door != null && Size == door.Size && Orientation == ActorOrientation.TALL)
+            if (door != null && Width == door.Width && Height == door.Height)
             {
                 _level.NotifyDoorOpened(door);
             }
