@@ -66,9 +66,9 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Actor.OnDrop += () =>
+            level.OnActorDrop += actor =>
             {
-                if (level.Actor.CurrentPlatform == Platforms.First())
+                if (actor.CurrentPlatform == Platforms.First())
                 {
                     LevelContext.SuppressHint(RUN_DOWN_HINT);
 

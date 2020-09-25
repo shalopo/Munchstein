@@ -25,20 +25,14 @@ namespace Munchstein
         public Actor(ILevel level, Point2 location) => 
             (Location, Velocity, _level) = (location, new Vector2(0, 0), level);
         
+        private readonly ILevel _level;
         public Point2 Location { get; internal set; }
         public Vector2 Velocity { get; internal set; }
-        public bool CanJump { get; set; } = true;
-        public bool CanChangeOrientation { get; set; } = false;
 
         private int _lastWalkSign = 0;
         private int _continuousWalkTime = 0;
         private bool _preparingForJump = false;
         private bool _isJumping = false;
-
-        private readonly ILevel _level;
-        public event Action OnJump;
-        public event Action OnDrop;
-        public event Action<Munch> OnMunch;
 
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
@@ -144,7 +138,7 @@ namespace Munchstein
             if (munch != null)
             {
                 Size *= 2;
-                OnMunch?.Invoke(munch);
+                _level.NotifyActorMunch(this, munch);
             }
 
             if (Location.Y <= 0)
@@ -174,7 +168,7 @@ namespace Munchstein
                 _continuousWalkTime = 0;
                 bool changedOrientation = false;
 
-                if (CanChangeOrientation && collidingPlatform.Type == PlatformType.CONCRETE_POINT)
+                if (_level.CanActorChangeOrientation && collidingPlatform.Type == PlatformType.CONCRETE_POINT)
                 {
                     switch (Orientation)
                     {
@@ -254,7 +248,7 @@ namespace Munchstein
                 return;
             }
 
-            OnDrop?.Invoke();
+            _level.NotifyActorDrop(this);
 
             if (CurrentPlatform.Type == PlatformType.PASSTHROUGH)
             {
@@ -287,9 +281,9 @@ namespace Munchstein
 
         public void PrepareForJump()
         {
-            if (!CanJump)
+            if (!_level.CanActorJump)
             {
-                OnJump?.Invoke();
+                _level.NotifyActorJump(this);
                 return;
             }
 
@@ -316,7 +310,7 @@ namespace Munchstein
             _isJumping = true;
             _preparingForJump = false;
 
-            OnJump?.Invoke();
+            _level.NotifyActorJump(this);
 
             Velocity += new Vector2(0, JumpSpeed);
 

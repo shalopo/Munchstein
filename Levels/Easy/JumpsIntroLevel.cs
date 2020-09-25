@@ -43,7 +43,7 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Actor.OnJump += () =>
+            level.OnActorJump += actor =>
             {
                 LevelContext.SuppressHint(JUMP_HINT);
                 LevelContext.DisplayMessage("You got it!", seconds: 2);

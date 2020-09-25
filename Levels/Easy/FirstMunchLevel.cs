@@ -96,17 +96,17 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            level.Actor.OnMunch += (munch) =>
+            level.OnActorMunch += (actor, munch) =>
             {
-                level.Actor.Location += new Vector2(-level.Actor.Width / 2, level.Actor.Height / 2);
+                actor.Location += new Vector2(-actor.Width / 2, actor.Height / 2);
 
                 LevelContext.DisplayMessage("Yum! Big boys can jump higher!");
-                level.Actor.Velocity = Vector2.ZERO;
+                actor.Velocity = Vector2.ZERO;
             };
 
-            level.Actor.OnJump += () =>
+            level.OnActorJump += actor =>
             {
-                if (level.Actor.Size == 2)
+                if (actor.Size == 2)
                 {
                     LevelContext.DisplayMessage("Jumping higher is a good thing! Right?...");
                 }

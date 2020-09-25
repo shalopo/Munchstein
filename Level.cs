@@ -20,11 +20,18 @@ namespace Munchstein
         readonly ILevelContext _levelControl;
         readonly List<Platform> _platforms = new List<Platform>();
         public Door Door { get; private set; }
-
         public Actor Actor { get; private set; }
         public Munch Munch { get; set; }
+
+        public bool CanActorJump { get; set; } = true;
+        public bool CanActorChangeOrientation { get; set; } = false;
+
         private LevelState _checkpoint;
+
         public event Action<Actor> OnActorDeath;
+        public event Action<Actor> OnActorJump;
+        public event Action<Actor> OnActorDrop;
+        public event Action<Actor, Munch> OnActorMunch;
 
         struct LevelState
         {
@@ -102,6 +109,21 @@ namespace Munchstein
         {
             LoadLastCheckpoint();
             OnActorDeath?.Invoke(actor);
+        }
+
+        void ILevel.NotifyActorMunch(Actor actor, Munch munch)
+        {
+            OnActorMunch?.Invoke(actor, munch);
+        }
+
+        void ILevel.NotifyActorJump(Actor actor)
+        {
+            OnActorJump?.Invoke(actor);
+        }
+
+        void ILevel.NotifyActorDrop(Actor actor)
+        {
+            OnActorDrop?.Invoke(actor);
         }
 
         Munch ILevel.TryEatMunch(Box2 box)

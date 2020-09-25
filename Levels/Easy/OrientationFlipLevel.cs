@@ -259,7 +259,7 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Actor.CanChangeOrientation = true;
+            level.CanActorChangeOrientation = true;
             level.Door.Size = 2;
             level.Door.Location -= Vector2.X_UNIT / 4;
 
@@ -275,9 +275,9 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            level.Actor.OnMunch += munch =>
+            level.OnActorMunch += (actor, munch) =>
             {
-                if (level.Actor.Orientation == ActorOrientation.TALL)
+                if (actor.Orientation == ActorOrientation.TALL)
                 {
                     LevelContext.DisplayMessage("You know what to do now... Right?");
                 }

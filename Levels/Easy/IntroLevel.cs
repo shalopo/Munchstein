@@ -36,8 +36,8 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Actor.CanJump = false;
-            level.Actor.OnJump += () => LevelContext.DisplayMessage("When exactly did we say you can jump?");
+            level.CanActorJump = false;
+            level.OnActorJump += actor => LevelContext.DisplayMessage("When exactly did we say you can jump?");
         }
     }
 }
