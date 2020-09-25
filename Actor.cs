@@ -10,6 +10,7 @@ namespace Munchstein
     {
         TALL,
         FLAT,
+        SQUARE,
     }
 
     public class Actor
@@ -46,11 +47,11 @@ namespace Munchstein
         internal int Size { get; set; } = 1;
         internal ActorOrientation Orientation { get; set; } = ActorOrientation.TALL;
         public double Height => Orientation == ActorOrientation.TALL ? Size : Size / 2.0;
-        public double Width => Orientation == ActorOrientation.TALL ? Size / 2.0 : Size;
+        public double Width => Orientation == ActorOrientation.FLAT ? Size : Size / 2.0;
 
         private double SizeFactor => 0.4 + 0.6 * Size;
         double JumpSpeed => (Orientation == ActorOrientation.TALL ? BASE_JUMP_SPEED : 1.6 * BASE_MAX_GROUND_SPEED) * SizeFactor;
-        double MaxGroundSpeed => (Orientation == ActorOrientation.TALL ? BASE_MAX_GROUND_SPEED : BASE_JUMP_SPEED) * SizeFactor;
+        double MaxGroundSpeed => (Orientation == ActorOrientation.FLAT ? BASE_JUMP_SPEED : BASE_MAX_GROUND_SPEED) * SizeFactor;
         double GroundAcceleration => SizeFactor * BASE_GROUND_ACCELERATION;
         public Box2 Box => new Box2(new Point2(Location.X - Width / 2, Location.Y + Height), Width, Height);
 
