@@ -16,8 +16,8 @@ namespace Munchstein.Levels
         protected override void PostBuild(Level level)
         {
             level.CanActorChangeOrientation = true;
-            level.Actor.Orientation = ActorOrientation.SQUARE;
-            level.Munch = new Munch(level.Actor.Location + Vector2.Y_UNIT);
+            level.Actors.First().Orientation = ActorOrientation.SQUARE;
+            level.Munch = new Munch(level.Actors.First().Location + Vector2.Y_UNIT);
         }
     }
 }

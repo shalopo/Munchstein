@@ -204,7 +204,10 @@ namespace Munchstein
                 DrawMunch(g, Level.Munch);
             }
 
-            DrawActor(g, Level.Actor);
+            foreach (var actor in Level.Actors)
+            {
+                DrawActor(g, actor);
+            }
 
             UpdateFps();
 
@@ -230,10 +233,12 @@ namespace Munchstein
         {
             g.DrawString(_fps.ToString(), new Font("arial", 12), Brushes.White, 0, 0);
 
-            var location = Level.Actor.Location;
+            var actor = Level.Actors.First();
+
+            var location = actor.Location;
             g.DrawString($"({location.X:N4},{location.Y:N4})", new Font("arial", 12), Brushes.White, 40, 0);
 
-            var velocity = Level.Actor.Velocity;
+            var velocity = actor.Velocity;
             g.DrawString($"({velocity.X:N4},{velocity.Y:N4})", new Font("arial", 12), Brushes.White, 200, 0);
         }
 
@@ -384,24 +389,34 @@ namespace Munchstein
 
         private void HandleContinuousKeys()
         {
-            var actor = Level.Actor;
-
             if (Keyboard.IsKeyDown(Key.Right))
             {
-                actor.MoveSideways(1);
+                foreach (var actor in Level.Actors)
+                {
+                    actor.MoveSideways(1);
+                }
             }
             else if (Keyboard.IsKeyDown(Key.Left))
             {
-                actor.MoveSideways(-1);
+                foreach (var actor in Level.Actors)
+                {
+                    actor.MoveSideways(-1);
+                }
             }
             else
             {
-                actor.Stop();
+                foreach (var actor in Level.Actors)
+                {
+                    actor.Stop();
+                }
             }
 
             if (Keyboard.IsKeyDown(Key.Space))
             {
-                actor.PrepareForJump();
+                foreach (var actor in Level.Actors)
+                {
+                    actor.PrepareForJump();
+                }
             }
         }
 
@@ -418,15 +433,19 @@ namespace Munchstein
                 return;
             }
 
-            var actor = Level.Actor;
-
             switch (e.KeyCode)
             {
                 case Keys.Down:
-                    actor.Drop();
+                    foreach (var actor in Level.Actors)
+                    {
+                        actor.Drop();
+                    }
                     break;
                 case Keys.Up:
-                    actor.Action();
+                    foreach (var actor in Level.Actors)
+                    {
+                        actor.Action();
+                    }
                     break;
                 case Keys.R:
                     RestartLevel();
@@ -447,13 +466,19 @@ namespace Munchstein
                 case Keys.OemPeriod:
                     if (_debug && e.Control && e.Shift)
                     {
-                        Level.Actor.Location += new Vector2(0.05, 0);
+                        foreach (var actor in Level.Actors)
+                        {
+                            actor.Location += new Vector2(0.05, 0);
+                        }
                     }
                     break;
                 case Keys.Oemcomma:
                     if (_debug && e.Control && e.Shift)
                     {
-                        Level.Actor.Location += new Vector2(-0.05, 0);
+                        foreach (var actor in Level.Actors)
+                        {
+                            actor.Location += new Vector2(-0.05, 0);
+                        }
                     }
                     break;
             }
@@ -466,11 +491,13 @@ namespace Munchstein
                 return;
             }
 
-            var actor = Level.Actor;
             switch (e.KeyCode)
             {
                 case Keys.Space:
-                    actor.ReleaseJumpIfPreparing();
+                    foreach (var actor in Level.Actors)
+                    {
+                        actor.ReleaseJumpIfPreparing();
+                    }
                     break;
             }
         }

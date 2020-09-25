@@ -16,7 +16,7 @@ namespace Munchstein.Levels.Credits
         {
             LevelContext.DisplayMessage("Nice to see you, come again!");
 
-            level.Actor.Location = new Point2(15, 15);
+            level.Actors.First().Location = new Point2(15, 15);
 
             var rand = new Random();
 

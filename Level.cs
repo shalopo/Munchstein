@@ -14,14 +14,16 @@ namespace Munchstein
             _levelControl = levelControl;
             _platforms = platforms;
             Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.X_UNIT / 2);
-            Actor = new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2);
+            _actors = new List<Actor> { new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2)};
         }
 
         readonly ILevelContext _levelControl;
         readonly List<Platform> _platforms = new List<Platform>();
         public Door Door { get; private set; }
-        public Actor Actor { get; private set; }
         public Munch Munch { get; set; }
+
+        private List<Actor> _actors;
+        public IReadOnlyCollection<Actor> Actors => _actors;
 
         public bool CanActorJump { get; set; } = true;
         public bool CanActorChangeOrientation { get; set; } = false;
@@ -43,7 +45,7 @@ namespace Munchstein
                 public Vector2 Velocity { get; set; }
             }
 
-            public ActorState Actor { get; set; }
+            public List<ActorState> Actors { get; set; }
             public Munch Munch { get; set; }
         }
 
@@ -140,32 +142,36 @@ namespace Munchstein
 
         public void Step(double dt)
         {
-            Actor.Step(dt);
+            foreach (var actor in _actors)
+            {
+                actor.Step(dt);
+            }
         }
 
         public void SaveCheckpoint()
         {
             _checkpoint = new LevelState
             {
-                Actor = new LevelState.ActorState
+                Actors = Actors.Select(actor => new LevelState.ActorState
                 {
-                    Location = Actor.Location,
-                    Orientation = Actor.Orientation,
-                    Size = Actor.Size,
-                    Velocity = Actor.Velocity,
-                },
+                    Location = actor.Location,
+                    Orientation = actor.Orientation,
+                    Size = actor.Size,
+                    Velocity = actor.Velocity,
+                }).ToList(),
                 Munch = Munch,
             };
         }
 
         private void LoadLastCheckpoint()
         {
-            var actorState = _checkpoint.Actor;
-            Actor.Location = actorState.Location;
-            Actor.Orientation = actorState.Orientation;
-            Actor.Size = actorState.Size;
-            Actor.Velocity = actorState.Velocity;
-            
+            _actors = _checkpoint.Actors.Select(actorState => new Actor(this, actorState.Location)
+            {
+                Orientation = actorState.Orientation,
+                Size = actorState.Size,
+                Velocity = actorState.Velocity,
+            }).ToList();
+
             Munch = _checkpoint.Munch;
         }
 
