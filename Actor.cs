@@ -36,7 +36,6 @@ namespace Munchstein
         private bool _isJumping = false;
 
         private readonly ILevel _level;
-        public event Action OnDeath;
         public event Action OnJump;
         public event Action OnDrop;
         public event Action<Munch> OnMunch;
@@ -150,8 +149,7 @@ namespace Munchstein
 
             if (Location.Y <= 0)
             {
-                _level.NotifyActorDead();
-                OnDeath?.Invoke();
+                _level.NotifyActorDeath(this);
             }
         }
 

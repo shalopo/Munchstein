@@ -76,7 +76,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            level.Actor.OnDeath += () =>
+            level.OnActorDeath += actor =>
             {
                 if (DroppedFromFirstPlatform)
                 {

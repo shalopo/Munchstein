@@ -20,10 +20,10 @@ namespace Munchstein.Levels.Credits
 
             var rand = new Random();
 
-            level.Actor.OnDeath += () =>
+            level.OnActorDeath += actor =>
             {
-                level.Actor.Location = new Point2(rand.Next() % 20 + 5, rand.Next() % 5 + 5);
-                level.Actor.Velocity = new Vector2(rand.Next() % 20 - 5, rand.Next() % 20);
+                actor.Location = new Point2(rand.Next() % 20 + 5, rand.Next() % 5 + 5);
+                actor.Velocity = new Vector2(rand.Next() % 20 - 5, rand.Next() % 20);
             };
         }
     }

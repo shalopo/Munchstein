@@ -8,6 +8,6 @@
         Munch TryEatMunch(Box2 box);
 
         void NotifyDoorOpened(Door door);
-        void NotifyActorDead();
+        void NotifyActorDeath(Actor actor);
     }
 }

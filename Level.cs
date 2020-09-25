@@ -24,6 +24,7 @@ namespace Munchstein
         public Actor Actor { get; private set; }
         public Munch Munch { get; set; }
         private LevelState _checkpoint;
+        public event Action<Actor> OnActorDeath;
 
         struct LevelState
         {
@@ -97,9 +98,10 @@ namespace Munchstein
             _levelControl.NotifyLevelComplete();
         }
 
-        void ILevel.NotifyActorDead()
+        void ILevel.NotifyActorDeath(Actor actor)
         {
             LoadLastCheckpoint();
+            OnActorDeath?.Invoke(actor);
         }
 
         Munch ILevel.TryEatMunch(Box2 box)
