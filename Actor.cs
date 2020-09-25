@@ -134,7 +134,7 @@ namespace Munchstein
 
             ApplyCollisions(dt);
 
-            var munch = _level.TryEatMunch(Box);
+            var munch = _level.TryEatMunch(this);
             if (munch != null)
             {
                 Size *= 2;

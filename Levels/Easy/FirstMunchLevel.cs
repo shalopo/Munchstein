@@ -73,7 +73,7 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.Munch = new Munch(new Point2(21.15, 9.9));
+            level.Munches.Add(new Munch(new Point2(21.15, 9.9)));
             level.Door.Size = 2;
 
             _checkpoint.OnActorLanding += actor =>

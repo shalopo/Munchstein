@@ -263,7 +263,7 @@ namespace Munchstein.Levels.Easy
             level.Door.Size = 2;
             level.Door.Location -= Vector2.X_UNIT / 4;
 
-            level.Munch = new Munch(new Point2(9, 2.5));
+            level.Munches.Add(new Munch(new Point2(9, 2.5)));
 
             _checkpoint1.OnActorChangedOrientation += actor => level.SaveCheckpoint();
 

@@ -199,9 +199,9 @@ namespace Munchstein
                 DrawHint(g);
             }
 
-            if (Level.Munch != null)
+            foreach (var munch in Level.Munches)
             {
-                DrawMunch(g, Level.Munch);
+                DrawMunch(g, munch);
             }
 
             foreach (var actor in Level.Actors)

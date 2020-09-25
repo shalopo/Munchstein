@@ -14,16 +14,15 @@ namespace Munchstein
             _levelControl = levelControl;
             _platforms = platforms;
             Door = platforms.Count == 0 ? null : new Door(platforms.Last().Box.TopRight - Vector2.X_UNIT / 2);
-            _actors = new List<Actor> { new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2)};
+            Actors.Add(new Actor(this, platforms.Count == 0 ? new Point2(0, 0) : platforms[0].Box.TopLeft + Vector2.X_UNIT / 2));
         }
 
         readonly ILevelContext _levelControl;
         readonly List<Platform> _platforms = new List<Platform>();
         public Door Door { get; private set; }
-        public Munch Munch { get; set; }
 
-        private List<Actor> _actors;
-        public IReadOnlyCollection<Actor> Actors => _actors;
+        public List<Actor> Actors = new List<Actor>();
+        public List<Munch> Munches = new List<Munch>();
 
         public bool CanActorJump { get; set; } = true;
         public bool CanActorChangeOrientation { get; set; } = false;
@@ -46,7 +45,7 @@ namespace Munchstein
             }
 
             public List<ActorState> Actors { get; set; }
-            public Munch Munch { get; set; }
+            public List<Munch> Munches { get; set; }
         }
 
         public IReadOnlyCollection<Platform> Platforms => _platforms;
@@ -113,36 +112,28 @@ namespace Munchstein
             OnActorDeath?.Invoke(actor);
         }
 
-        void ILevel.NotifyActorMunch(Actor actor, Munch munch)
-        {
-            OnActorMunch?.Invoke(actor, munch);
-        }
+        void ILevel.NotifyActorMunch(Actor actor, Munch munch) => OnActorMunch?.Invoke(actor, munch);
+        void ILevel.NotifyActorJump(Actor actor) => OnActorJump?.Invoke(actor);
+        void ILevel.NotifyActorDrop(Actor actor) => OnActorDrop?.Invoke(actor);
 
-        void ILevel.NotifyActorJump(Actor actor)
-        {
-            OnActorJump?.Invoke(actor);
-        }
+        Munch LocateOverlappingMunch(Box2 box) => Munches.FirstOrDefault(munch => Box2.Overlap(munch.Box, box));
 
-        void ILevel.NotifyActorDrop(Actor actor)
+        Munch ILevel.TryEatMunch(Actor actor)
         {
-            OnActorDrop?.Invoke(actor);
-        }
+            var munch = LocateOverlappingMunch(actor.Box);
 
-        Munch ILevel.TryEatMunch(Box2 box)
-        {
-            if (Munch != null && Box2.Overlap(Munch.Box, box))
+            if (munch == null)
             {
-                var munch = Munch;
-                Munch = null;
-                return munch;
+                return null;
             }
 
-            return null;
+            Munches.Remove(munch);
+            return munch;
         }
 
         public void Step(double dt)
         {
-            foreach (var actor in _actors)
+            foreach (var actor in Actors)
             {
                 actor.Step(dt);
             }
@@ -159,20 +150,20 @@ namespace Munchstein
                     Size = actor.Size,
                     Velocity = actor.Velocity,
                 }).ToList(),
-                Munch = Munch,
+                Munches = new List<Munch>(Munches),
             };
         }
 
         private void LoadLastCheckpoint()
         {
-            _actors = _checkpoint.Actors.Select(actorState => new Actor(this, actorState.Location)
+            Actors = _checkpoint.Actors.Select(actorState => new Actor(this, actorState.Location)
             {
                 Orientation = actorState.Orientation,
                 Size = actorState.Size,
                 Velocity = actorState.Velocity,
             }).ToList();
 
-            Munch = _checkpoint.Munch;
+            Munches = new List<Munch>(_checkpoint.Munches);
         }
 
     }
