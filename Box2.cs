@@ -84,7 +84,7 @@ namespace Munchstein
                     lineLength: Math.Min(Right, other.Right) - Math.Max(Left, other.Left));
             }
 
-            if (preDispositioned.Top - other.Bottom > COLLISION_THRESHOLD)
+            if (other.Left - preDispositioned.Right > COLLISION_THRESHOLD && preDispositioned.Top - other.Bottom >= COLLISION_THRESHOLD)
             {
                 return new Collision(new Vector2(Right - other.Left, 0),
                     lineLength: Math.Min(Top, other.Top) - Math.Max(Bottom, other.Bottom));
