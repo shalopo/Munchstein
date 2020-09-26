@@ -197,7 +197,7 @@ namespace Munchstein
                             }
                             else if (!isXCollision && orientation != ActorOrientation.TALL)
                             {
-                                actorsToUnite.Add(new Actor(this, midpoint)
+                                actorsToUnite.Add(new Actor(this, new Point2(midpoint.X, Math.Min(actor1.Location.Y, actor2.Location.Y)))
                                 {
                                     Orientation = orientation == ActorOrientation.FLAT ? ActorOrientation.SQUARE : ActorOrientation.TALL,
                                     Size = orientation == ActorOrientation.FLAT ? size * 2 : size,

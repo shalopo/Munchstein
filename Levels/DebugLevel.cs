@@ -18,13 +18,13 @@ namespace Munchstein.Levels
 
         protected override void PostBuild(Level level)
         {
-            var orientations = ActorOrientation.SQUARE;
-
-            level.Actors.First().Orientation = orientations;
+            level.Actors.First().Orientation = ActorOrientation.TALL;
             level.Actors.First().Size = 2;
             level.Actors.First().Location = new Point2(7, 3);
 
-            level.Actors.Add(new Actor(level, new Point2(7, 8)) { Velocity = new Vector2(0.1, 0), Orientation = orientations, Size = 2 });
+            var orientations = ActorOrientation.SQUARE;
+            level.Actors.Add(new Actor(level, new Point2(7, 8)) { Orientation = orientations, Size = 2  });
+            level.Actors.Add(new Actor(level, new Point2(7, 10)) { Orientation = orientations, Size = 1 });
 
             level.Munches.Add(new Munch(new Point2(7.4, 12.6)));
         }
