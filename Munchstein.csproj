@@ -77,6 +77,7 @@
     <Compile Include="Levels\Easy\JumpsIntroLevel.cs" />
     <Compile Include="Levels\Easy\LevelsSequenceFactory.cs" />
     <Compile Include="Levels\Credits\CreditsLevel.cs" />
+    <Compile Include="Levels\Easy\SplitLevel.cs" />
     <Compile Include="Munch.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Point2.cs" />

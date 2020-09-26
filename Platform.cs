@@ -9,9 +9,10 @@ namespace Munchstein
     public enum PlatformType
     {
         CONCRETE,
-        CONCRETE_POINT,
+        FLIPPER,
         PASSTHROUGH,
         ONEWAY,
+        SPLITTER,
     }
 
     public enum InteractionType
@@ -34,11 +35,19 @@ namespace Munchstein
             return new Platform(new Box2(topLeft: topLeft, width: width, height: height)) { Type = PlatformType.CONCRETE };
         }
 
-        public static Platform ConcretePoint(Point2 bottomLeft)
+        public static Platform Flipper(Point2 bottomLeft)
         {
             return new Platform(new Box2(topLeft: bottomLeft + new Vector2(0, 0.1), width: 0.1, height: 0.1))
             {
-                Type = PlatformType.CONCRETE_POINT
+                Type = PlatformType.FLIPPER
+            };
+        }
+
+        public static Platform Splitter(Point2 topLeft)
+        {
+            return new Platform(new Box2(topLeft: topLeft, width: 0.04, height: 1))
+            {
+                Type = PlatformType.SPLITTER
             };
         }
 
@@ -54,7 +63,7 @@ namespace Munchstein
 
         public Box2 Box { get; private set; }
         public PlatformType Type { get; private set; }
-        public bool IsCollidable => Type == PlatformType.CONCRETE || Type == PlatformType.CONCRETE_POINT;
+        public bool IsCollidable => Type == PlatformType.CONCRETE || Type == PlatformType.FLIPPER || Type == PlatformType.SPLITTER;
 
         private event Action<Actor, InteractionType> OnInteract;
 

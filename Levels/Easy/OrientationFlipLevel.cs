@@ -31,7 +31,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.OneWay(new Point2(2, 9), width: 2));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayHint(POINT_HINT);
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(4.5, 9.9)));
+            Add(Platform.Flipper(bottomLeft: new Point2(4.5, 9.9)));
 
             var lowVelocityFails = 0;
             var verticalVelocityUnnecessaryFails = 0;
@@ -106,7 +106,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(18.5, 2.9)));
+            Add(Platform.Flipper(bottomLeft: new Point2(18.5, 2.9)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -123,7 +123,7 @@ namespace Munchstein.Levels.Easy
             Add(Platform.PassThrough(new Point2(20, 6), width: 1));
             Add(Platform.OneWay(new Point2(18, 8), width: 12));
 
-            _checkpoint1 = Add(Platform.ConcretePoint(bottomLeft: new Point2(26, 10.4)));
+            _checkpoint1 = Add(Platform.Flipper(bottomLeft: new Point2(26, 10.4)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 if (actor.Size == 1)
@@ -149,7 +149,7 @@ namespace Munchstein.Levels.Easy
                 }
             };
 
-            Add(Platform.ConcretePoint(bottomLeft: new Point2(4, 2)));
+            Add(Platform.Flipper(bottomLeft: new Point2(4, 2)));
             Platforms.Last().OnActorChangedOrientation += actor =>
             {
                 LevelContext.DisplayMessage("You've figured something out on your own! That's new!");
@@ -259,7 +259,6 @@ namespace Munchstein.Levels.Easy
 
         protected override void PostBuild(Level level)
         {
-            level.CanActorChangeOrientation = true;
             level.Door.Size = 2;
             level.Door.Location -= Vector2.X_UNIT / 4;
 

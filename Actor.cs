@@ -21,11 +21,14 @@ namespace Munchstein
         static readonly double DRAG_CONSTANT = 0.012;
         static readonly double BASE_JUMP_SPEED = 7;
         static readonly double BASE_GROUND_ACCELERATION = 0.02;
+
+        static int NextId = 1;
         
         public Actor(ILevel level, Point2 location) => 
-            (Location, Velocity, _level) = (location, new Vector2(0, 0), level);
+            (Location, Velocity, _level, Id) = (location, new Vector2(0, 0), level, NextId++);
         
         private readonly ILevel _level;
+        public int Id { get; private set; }
         public Point2 Location { get; internal set; }
         public Vector2 Velocity { get; internal set; }
 
@@ -33,6 +36,7 @@ namespace Munchstein
         private int _continuousWalkTime = 0;
         private bool _preparingForJump = false;
         private bool _isJumping = false;
+        public List<Actor> SplitResult { get; private set; }
 
         public Platform CurrentPlatform { get; private set; }
         public Platform LastPlatform { get; private set; }
@@ -41,6 +45,7 @@ namespace Munchstein
         internal ActorOrientation Orientation { get; set; } = ActorOrientation.TALL;
         public double Height => Orientation == ActorOrientation.TALL ? Size : Size / 2.0;
         public double Width => Orientation == ActorOrientation.FLAT ? Size : Size / 2.0;
+        public double Mass => Height * Width;
 
         private double SizeFactor => 0.4 + 0.6 * Size;
         double JumpSpeed => (Orientation == ActorOrientation.TALL ? BASE_JUMP_SPEED : 1.6 * BASE_MAX_GROUND_SPEED) * SizeFactor;
@@ -168,7 +173,18 @@ namespace Munchstein
                 _continuousWalkTime = 0;
                 bool changedOrientation = false;
 
-                if (_level.CanActorChangeOrientation && collidingPlatform.Type == PlatformType.CONCRETE_POINT)
+                if (collidingPlatform.Type == PlatformType.SPLITTER && collision.Vector.Y < 0 && Orientation != ActorOrientation.TALL)
+                {
+                    SplitResult = new int[] { 1, -1 }.Select(sign => new Actor(_level,
+                        collidingPlatform.Box.TopLeft + new Vector2(sign * Width, 0))
+                    {
+                        Velocity = new Vector2(sign * 1, 0),
+                        Orientation = Orientation == ActorOrientation.FLAT ? ActorOrientation.SQUARE : ActorOrientation.TALL,
+                        Size = Orientation == ActorOrientation.FLAT ? Size : Size / 2,
+                    }).ToList();
+                }
+
+                if (collidingPlatform.Type == PlatformType.FLIPPER)
                 {
                     switch (Orientation)
                     {

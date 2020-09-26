@@ -25,7 +25,6 @@ namespace Munchstein
         public List<Munch> Munches = new List<Munch>();
 
         public bool CanActorJump { get; set; } = true;
-        public bool CanActorChangeOrientation { get; set; } = false;
 
         private LevelState _checkpoint;
 
@@ -73,6 +72,8 @@ namespace Munchstein
 
         Platform ILevel.GetSupportingPlatform(Box2 box)
         {
+            //todo: this should be based on velocity vector to make sure we are not missing a platform if moving too fast
+
             const double COLLISION_THRESHOLD = Box2.COLLISION_THRESHOLD;
 
             foreach (Platform platform in _platforms)
@@ -116,11 +117,11 @@ namespace Munchstein
         void ILevel.NotifyActorJump(Actor actor) => OnActorJump?.Invoke(actor);
         void ILevel.NotifyActorDrop(Actor actor) => OnActorDrop?.Invoke(actor);
 
-        Munch LocateOverlappingMunch(Box2 box) => Munches.FirstOrDefault(munch => Box2.Overlap(munch.Box, box));
+        Munch LocateOverlappingMunch(Actor actor) => Munches.FirstOrDefault(munch => Box2.Overlap(munch.Box, actor.Box));
 
         Munch ILevel.TryEatMunch(Actor actor)
         {
-            var munch = LocateOverlappingMunch(actor.Box);
+            var munch = LocateOverlappingMunch(actor);
 
             if (munch == null)
             {
@@ -133,9 +134,108 @@ namespace Munchstein
 
         public void Step(double dt)
         {
+            List<Actor> actorsToSplit = new List<Actor>();
+
+            CalculateActorsCollisions(dt);
+
             foreach (var actor in Actors)
             {
                 actor.Step(dt);
+
+                if (actor.SplitResult != null)
+                {
+                    actorsToSplit.Add(actor);
+                }
+            }
+
+            foreach (var actor in actorsToSplit)
+            {
+                Actors.AddRange(actor.SplitResult);
+                Actors.Remove(actor);
+            }
+        }
+
+        private void CalculateActorsCollisions(double dt)
+        {
+            if (Actors.Count == 1)
+            {
+                return;
+            }
+
+            Dictionary<Actor, List<Actor>> actorsToUnite = new Dictionary<Actor, List<Actor>>();
+
+            foreach (var actor1 in Actors)
+            {
+                foreach (var actor2 in Actors)
+                {
+                    if (actor1.Id < actor2.Id && Box2.Overlap(actor1.Box, actor2.Box))
+                    {
+                        var collision = actor1.Box.CalcualteCollision(dt * (actor1.Velocity - actor2.Velocity), actor2.Box);
+
+                        if (collision.IsNone)
+                        {
+                            continue;
+                        }
+
+                        bool isXCollision = collision.Vector.X != 0;
+
+                        if (actor1.Size == actor2.Size && actor1.Orientation == actor2.Orientation)
+                        {
+                            var size = actor1.Size;
+                            var orientation = actor1.Orientation;
+                            var midpoint = actor1.Location + (actor2.Location - actor1.Location) / 2;
+
+                            if (isXCollision && orientation != ActorOrientation.FLAT)
+                            {
+                                actorsToUnite.Add(new Actor(this, midpoint){
+                                    Orientation = orientation == ActorOrientation.TALL ? ActorOrientation.SQUARE : ActorOrientation.FLAT,
+                                    Size = orientation == ActorOrientation.TALL ? size * 2 : size,
+                                },
+                                new List<Actor> { actor1, actor2 });
+
+                                continue;
+                            }
+                            else if (!isXCollision && orientation != ActorOrientation.TALL)
+                            {
+                                actorsToUnite.Add(new Actor(this, midpoint)
+                                {
+                                    Orientation = orientation == ActorOrientation.FLAT ? ActorOrientation.SQUARE : ActorOrientation.TALL,
+                                    Size = orientation == ActorOrientation.FLAT ? size * 2 : size,
+                                },
+                                new List<Actor> { actor1, actor2 });
+
+                                continue;
+                            }
+                        }
+
+                        var unit = isXCollision ? Vector2.X_UNIT : Vector2.Y_UNIT;
+
+                        var m1 = actor1.Mass;
+                        var m2 = actor2.Mass;
+                        var v1 = actor1.Velocity * unit;
+                        var v2 = actor2.Velocity * unit;
+                        
+                        var u2 = (2 * m1 * v1 + v2 * (m2 - m1)) / (m1 + m2);
+                        var u1 = u2 + v2 - v1;
+
+                        actor1.Velocity += unit * (u1 - v1);
+                        actor2.Velocity += unit * (u2 - v2);
+
+                        //todo: this is definitely wrong
+                        actor1.Location -= collision.Vector / 2;
+                        actor2.Location += collision.Vector / 2;
+                    }
+                }
+            }
+
+            foreach (var item in actorsToUnite)
+            {
+                Actors.Add(item.Key);
+
+                foreach (var oldActor in item.Value)
+                {
+                    Actors.Remove(oldActor);
+                }
             }
         }
 

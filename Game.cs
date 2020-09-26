@@ -47,7 +47,7 @@ namespace Munchstein
 
             LevelsSequence = Levels.Easy.LevelsSequenceFactory.Create();
 
-            //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.Easy.OrientationFlipLevel>() };
+            //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.Easy.SplitLevel>() };
             //LevelsSequence = new LevelsSequence { new LevelFactory<Levels.DebugLevel>() };
 
             LevelIndex = 0;
@@ -325,8 +325,11 @@ namespace Munchstein
                 case PlatformType.CONCRETE:
                     g.FillRectangle(Brushes.DimGray, Transform(platform.Box));
                     break;
-                case PlatformType.CONCRETE_POINT:
+                case PlatformType.FLIPPER:
                     g.FillRectangle(Brushes.Purple, Transform(platform.Box));
+                    break;
+                case PlatformType.SPLITTER:
+                    g.FillRectangle(Brushes.Orange, Transform(platform.Box));
                     break;
                 case PlatformType.PASSTHROUGH:
                     g.DrawLine(new Pen(Brushes.White, 3), Transform(platform.Box.TopLeft), Transform(platform.Box.TopRight));
@@ -344,7 +347,10 @@ namespace Munchstein
 
         private void DrawActor(Graphics g, Actor actor)
         {
-            g.FillRectangle(Brushes.Blue, new Rectangle(Transform(actor.Box.TopLeft), Transform(actor.Box.Size)));
+            var rect = new Rectangle(Transform(actor.Box.TopLeft), Transform(actor.Box.Size));
+
+            g.FillRectangle(Brushes.Blue, rect);
+            g.DrawRectangle(new Pen(Brushes.CadetBlue), rect);
         }
 
         private bool DrawMessage(Graphics g)

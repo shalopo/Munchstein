@@ -18,6 +18,7 @@ namespace Munchstein.Levels.Easy
                 new LevelFactory<ConfusingJumpsLevel>(),
                 new LevelFactory<FirstMunchLevel>(),
                 new LevelFactory<OrientationFlipLevel>(),
+                new LevelFactory<SplitLevel>(),
             };
         }
     }

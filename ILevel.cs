@@ -3,7 +3,6 @@
     public interface ILevel
     {
         bool CanActorJump { get; }
-        bool CanActorChangeOrientation { get; }
 
         Platform GetSupportingPlatform(Box2 box);
         Platform GetCollidingPlatform(Box2 box);
