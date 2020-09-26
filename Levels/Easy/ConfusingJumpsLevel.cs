@@ -16,28 +16,27 @@ namespace Munchstein.Levels.Easy
 
             Platforms[0].OnActorLanding += actor => LevelContext.DisplayMessage("That doesn't look too bad...");
 
-            Add(Platform.Concrete(new Point2(14.8, 8.8), width: 1, height: 1));
+            Add(Platform.Concrete(new Point2(15.35, 8.8), width: 0.5, height: 0.5));
+            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("If it fits, I sits");
             DeathTaunts.Add(Platforms.Last(), "Well yes, but actually no");
 
             Add(Platform.Concrete(new Point2(18, 7.4), width: 2, height: 2.2));
             DeathTaunts.Add(Platforms.Last(), "Absolutely but not really");
 
-            Add(Platform.Concrete(new Point2(18.6, 7.55), width: 0.5, height: 0.15));
-            Platforms.Last().OnActorStanding += actor => LevelContext.DisplayMessage("If it fits, I sits");
+            Add(Platform.Concrete(new Point2(19.5, 7.5), width: 0.5, height: 0.1));
+            DeathTaunts.Add(Platforms.Last(), "Maybe this isn't the right game for you");
 
-            Add(Platform.Concrete(new Point2(17.85, 6.2), width: 0.15, height: 0.5));
-            Add(Platform.Concrete(new Point2(19, 5.2), width: 0.5, height: 0.15));
-            Add(Platform.Concrete(new Point2(20.0, 6.9), width: 0.15, height: 0.5));
-
-            _boop = Add(Platform.Concrete(new Point2(18.7, 10.4), width: 1, height: 1));
-            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("This is exciting!");
-            DeathTaunts.Add(Platforms.Last(), "Did you really think it would be that easy?");
+            _boop = Add(Platform.Concrete(new Point2(18.8, 10.4), width: 0.9, height: 0.9));
+            Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("This is exciting! Or is it...");
+            DeathTaunts.Add(Platforms.Last(), "So cautious. Yet so dead");
             
-            Add(Platform.Concrete(new Point2(13, 3), width: 1, height: 1));
+            Add(Platform.Concrete(new Point2(13.1, 3), width: 1, height: 1));
             Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("Captain obvious to the rescue!");
             DeathTaunts.Add(Platforms.Last(), "LOL you knew this would fail");
 
-            Add(Platform.Concrete(new Point2(18.1, 3), width: 3.2));
+            Add(Platform.Concrete(new Point2(22.0, 13.0), width: 0.3, height: 8.0));
+
+            Add(Platform.Concrete(new Point2(18.3, 3), width: 2.5));
 
             Platforms.Last().OnActorLanding += actor => LevelContext.DisplayMessage("Deep in my heart I have always believed in you");
         }
@@ -62,14 +61,6 @@ namespace Munchstein.Levels.Easy
                             LevelContext.DisplayMessage("Are you looking for mushrooms?");
                             break;
                         default:
-                            if (actor.Velocity.X > 0)
-                            {
-                                LevelContext.DisplayMessage("Maybe you're on to something");
-                            }
-                            else
-                            {
-                                LevelContext.DisplayMessage("Do you need DIRECTIONs?");
-                            }
                             break;
                     }
 
