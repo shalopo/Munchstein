@@ -260,7 +260,6 @@ namespace Munchstein.Levels.Easy
         protected override void PostBuild(Level level)
         {
             level.Door.Size = 2;
-            level.Door.Location -= Vector2.X_UNIT / 4;
 
             level.Munches.Add(new Munch(new Point2(9, 2.5)));
 

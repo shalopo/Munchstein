@@ -32,6 +32,11 @@ namespace Munchstein
 
             PostBuild(level);
 
+            if (level.Door != null)
+            {
+                level.Door.Location -= Vector2.X_UNIT * (level.Door.Size - 1) / 4.0;
+            }
+
             level.OnActorDeath += actor => DeathTaunts.NotifyDeath(actor.LastPlatform);
 
             level.Init();

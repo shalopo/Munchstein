@@ -32,6 +32,7 @@ namespace Munchstein
         public event Action<Actor> OnActorJump;
         public event Action<Actor> OnActorDrop;
         public event Action<Actor, Munch> OnActorMunch;
+        public event Action<Actor> OnActorUnion;
 
         struct LevelState
         {
@@ -230,12 +231,13 @@ namespace Munchstein
 
             foreach (var item in actorsToUnite)
             {
-                Actors.Add(item.Key);
-
                 foreach (var oldActor in item.Value)
                 {
                     Actors.Remove(oldActor);
                 }
+
+                Actors.Add(item.Key);
+                OnActorUnion?.Invoke(item.Key);
             }
         }
 

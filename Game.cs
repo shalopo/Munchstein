@@ -87,13 +87,13 @@ namespace Munchstein
 
             _msgToDisplay = null;
             _hintToDisplay = null;
-            _levelReplayContext = new LevelReplayContext();
             DisposeStaticGraphicsBuffer();
         }
 
         private void InitLevel()
         {
             Level = LevelFactory.Create(this);
+            _levelReplayContext = new LevelReplayContext();
             _paused = false;
         }
 
