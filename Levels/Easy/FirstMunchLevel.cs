@@ -34,6 +34,14 @@ namespace Munchstein.Levels.Easy
             };
 
             Add(Platform.PassThrough(new Point2(19, 8), width: 1.3));
+            Platforms.Last().OnActorLanding += actor =>
+            {
+                if (actor.Size == 2)
+                {
+                    LevelContext.DisplayMessage("Ah! I see you are a man of culture");
+                }
+            };
+
             Add(Platform.OneWay(new Point2(14.3, 7), width: 2));
             Add(Platform.PassThrough(new Point2(9, 4), width: 1.5));
             Add(Platform.PassThrough(new Point2(10.5, 8), width: 2.6));
@@ -53,16 +61,9 @@ namespace Munchstein.Levels.Easy
             Add(Platform.Concrete(new Point2(13.7, 9.3), width: 0.3, height: 0.3));
             Add(Platform.Concrete(new Point2(17.8, 3), width: 1, height: 0.3));
             Add(Platform.Concrete(new Point2(20.2, 3.8), width: 0.3));
+            DeathTaunts.Add(Platforms.Last(), "Wow, you really blew it this time!");
 
             Add(Platform.Concrete(new Point2(21, 8), width: 0.3, height: 0.5));
-            Platforms.Last().OnActorLanding += actor =>
-            {
-                if (actor.Size == 2)
-                {
-                    LevelContext.DisplayMessage("Ah! I see you are a man of culture");
-                }
-            };
-
             Add(Platform.Concrete(new Point2(21, 16.5), width: 0.3, height: 4));
             Add(Platform.Concrete(new Point2(21, 10.8), width: 0.3, height: 0.8));
             Add(Platform.Concrete(new Point2(15.1, 11.2), width: 0.3, height: 0.3));

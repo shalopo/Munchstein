@@ -35,7 +35,6 @@ namespace Munchstein
         private int _lastWalkSign = 0;
         private int _continuousWalkTime = 0;
         private bool _preparingForJump = false;
-        private bool _isJumping = false;
         public List<Actor> SplitResult { get; private set; }
 
         public Platform CurrentPlatform { get; private set; }
@@ -83,14 +82,7 @@ namespace Munchstein
                 {
                     Velocity = Velocity.XProjection;
 
-                    if (newPlatform != CurrentPlatform)
-                    {
-                        newPlatform.NotifyInteraction(this, InteractionType.LAND);
-                    }
-                    else
-                    {
-                        newPlatform.NotifyInteraction(this, InteractionType.STAND);
-                    }
+                    newPlatform.NotifyInteraction(this, newPlatform == CurrentPlatform ? InteractionType.STAND : InteractionType.LAND);
 
                     if (Velocity.X == 0)
                     {
@@ -101,15 +93,9 @@ namespace Munchstein
 
             if (CurrentPlatform != newPlatform)
             {
-                if (newPlatform != null)
-                {
-                    _isJumping = false;
-                }
-
                 LastPlatform = CurrentPlatform;
+                CurrentPlatform = newPlatform;
             }
-
-            CurrentPlatform = newPlatform;
         }
 
         public void Step(double dt)
@@ -307,32 +293,26 @@ namespace Munchstein
 
             UpdateSupportingPlatform();
 
-            if (CurrentPlatform == null)
+            if (CurrentPlatform == null || Velocity.Y != 0)
             {
                 return;
             }
 
-            if (!_isJumping)
-            {
-                _preparingForJump = true;
-            }
+            _preparingForJump = true;
         }
 
         public void ReleaseJumpIfPreparing()
         {
-            if (!_preparingForJump || _isJumping)
+            if (!_preparingForJump)
             {
                 return;
             }
 
-            _isJumping = true;
             _preparingForJump = false;
 
             _level.NotifyActorJump(this);
 
             Velocity += new Vector2(0, JumpSpeed);
-
-            LastPlatform = CurrentPlatform;
         }
 
     }
