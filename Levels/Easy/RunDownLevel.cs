@@ -49,9 +49,9 @@ namespace Munchstein.Levels.Easy
             Add(Platform.PassThrough(new Point2(12, 9), width: 3));
             Platforms.Last().OnActorStanding += actor => LevelContext.DisplayHint(ONE_WAY_HINT);
 
-            Add(Platform.OneWay(new Point2(12, 10), width: 8));
+            Add(Platform.OneWay(new Point2(11, 10), width: 9));
 
-            Add(Platform.OneWay(new Point2(12, 11), width: 10));
+            Add(Platform.OneWay(new Point2(10, 11), width: 12));
             _highOneWayPlatform = Platforms.Last();
 
             _highOneWayPlatform.OnActorStanding += actor =>
